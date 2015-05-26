@@ -21,13 +21,22 @@ void Client::update(World* world)
 {
   // Here update
   // Reciving and sending data to server
-	
+
+
   sf::Packet packet;
-  std::string s = "Hello!";
-  packet << s;
-  if(socket.send(packet) != sf::Socket::Done)
+  if(socket.receive(packet) == sf::Socket::Status::Done)
     {
-      std::cout << "Data not send!\n";
+      std::string event;
+      Enity enity;
+
+      if(packet >> event >> enity)
+	{
+	  if(event == "new_client")
+	    {
+	      world->addEnity(enity);
+	      std::cout << "New player conected.\n";
+	    }
+	}
     }
 	
 }

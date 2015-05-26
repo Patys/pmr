@@ -10,28 +10,17 @@ Game::Game()
   debug_text.setFont(font);
   debug_text.setCharacterSize(10);
 
+  Assets::Manager::loadTexture("player", "data/gfx/alienBeige.png");
   Assets::Manager::loadTexture("barrel", "data/gfx/rpgTile204.png");
   Assets::Manager::loadTexture("bush1", "data/gfx/rpgTile155.png");
   Assets::Manager::loadTexture("bush2", "data/gfx/rpgTile157.png");
   Assets::Manager::loadTexture("bush3", "data/gfx/rpgTile159.png");
 
+  sprites["player"] = sf::Sprite(*Assets::Manager::getTexture("player"));
   sprites["barrel"] = sf::Sprite(*Assets::Manager::getTexture("barrel"));
   sprites["bush1"] = sf::Sprite(*Assets::Manager::getTexture("bush1"));
   sprites["bush2"] = sf::Sprite(*Assets::Manager::getTexture("bush2"));
   sprites["bush3"] = sf::Sprite(*Assets::Manager::getTexture("bush3"));
-
-  world.addEnity(Enity(sf::Vector2f(10,100), 
-		       sf::Vector2f(64,64),
-		       100, "barrel", "barrel_1"));
-  world.addEnity(Enity(sf::Vector2f(100,100), 
-		       sf::Vector2f(64,64),
-		       100, "bush1", "bush_1"));
-  world.addEnity(Enity(sf::Vector2f(180,100), 
-		       sf::Vector2f(64,64),
-		       100, "bush2", "bush_2"));
-  world.addEnity(Enity(sf::Vector2f(180,180), 
-		       sf::Vector2f(64,64),
-		       100, "bush3", "bush_3"));
 }
 
 Game::~Game()

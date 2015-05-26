@@ -28,9 +28,18 @@ void Server::update(World* world)
 	  sf::TcpSocket* client = new sf::TcpSocket;
 	  if (listener.accept(*client) == sf::Socket::Done)
             {
-	      std::cout << "New Client !\n"; 
+	      std::string player_id = "player_id__" + std::to_string(reinterpret_cast<uint32_t>(client));
+	      world->addEnity(Enity(sf::Vector2f(100, 100),
+	      			    sf::Vector2f(66, 92),
+	       			    100, "player", player_id));
 	      clients.push_back(client);
 	      selector.add(*client);
+
+	      sf::Packet start_packet;
+	      start_packet << "new_client" << *world->getEnity(player_id); 
+	      client->send(start_packet);
+	      
+	      std::cout << "New client.\n";
             }
 	  else
             {
