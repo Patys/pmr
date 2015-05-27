@@ -36,7 +36,7 @@ void Server::update(World* world)
 	      selector.add(*client);
 
 	      sf::Packet start_packet;
-	      start_packet << "new_client" << *world->getEnity(player_id); 
+	      start_packet << "connected" << *world->getEnity(player_id); 
 	      client->send(start_packet);
 	      
 	      std::cout << "New client.\n";
@@ -60,8 +60,21 @@ void Server::update(World* world)
 		  if(client.receive(packet) == sf::Socket::Done)
                     {
 		      std::string s;
-		      packet >> s;
-		      std::cout << s;
+		      Enity enity;
+		      
+		      if(packet >> s >> enity)
+			{
+			  if(s == "update_position")
+			    {
+			      std::cout << enity.id << "\n";
+			      world->getEnity(enity.id)->position.x = enity.position.x;
+			      world->getEnity(enity.id)->position.y = enity.position.y;
+			    }
+			}
+
+		      sf::Packet send_packet;
+		      send_packet << "world_update" << world->getEnities();
+		      client.send(send_packet);
                     }
                 }
             }

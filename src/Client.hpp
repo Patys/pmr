@@ -15,4 +15,8 @@ public:
   void update(World* world);
 private:
   sf::TcpSocket socket;
+  std::string player_id;
+
+  sf::Clock update_clock;
+
 };

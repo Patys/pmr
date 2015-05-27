@@ -24,3 +24,6 @@ struct Enity
 
 sf::Packet& operator <<(sf::Packet& packet, const Enity& m);
 sf::Packet& operator >>(sf::Packet& packet, Enity& m);
+
+sf::Packet& operator <<(sf::Packet& packet, const std::vector<Enity>& m);
+sf::Packet& operator >>(sf::Packet& packet, std::vector<Enity>& m);

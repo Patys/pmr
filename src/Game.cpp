@@ -31,6 +31,7 @@ Game::~Game()
 void Game::run()
 {
   window.create(sf::VideoMode(800, 600), "Game by Patys");
+  bool focused = true;
   while(window.isOpen())
     {
       sf::Event event;
@@ -38,9 +39,14 @@ void Game::run()
         {
 	  if (event.type == sf::Event::Closed)
 	    window.close();
+	  if (event.type == sf::Event::LostFocus)
+	    focused = false;
+	  if (event.type == sf::Event::GainedFocus)
+	    focused = true;
         }
-        
-      client.update(&world);
+      
+      if(focused)
+	client.update(&world);
 
       draw();
     }
