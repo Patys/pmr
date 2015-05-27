@@ -32,4 +32,5 @@ private:
   std::string server_ip;
 	
   sf::RenderWindow window;
+  sf::View game_window;
 };

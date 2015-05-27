@@ -66,7 +66,6 @@ void Server::update(World* world)
 			{
 			  if(s == "update_position")
 			    {
-			      std::cout << enity.id << "\n";
 			      world->getEnity(enity.id)->position.x = enity.position.x;
 			      world->getEnity(enity.id)->position.y = enity.position.y;
 			    }

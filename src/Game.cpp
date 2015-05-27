@@ -21,6 +21,8 @@ Game::Game()
   sprites["bush1"] = sf::Sprite(*Assets::Manager::getTexture("bush1"));
   sprites["bush2"] = sf::Sprite(*Assets::Manager::getTexture("bush2"));
   sprites["bush3"] = sf::Sprite(*Assets::Manager::getTexture("bush3"));
+
+  game_window.reset(sf::FloatRect(400, 300, 800, 600));
 }
 
 Game::~Game()
@@ -31,6 +33,7 @@ Game::~Game()
 void Game::run()
 {
   window.create(sf::VideoMode(800, 600), "Game by Patys");
+  window.setFramerateLimit(60);
   bool focused = true;
   while(window.isOpen())
     {
@@ -46,7 +49,18 @@ void Game::run()
         }
       
       if(focused)
-	client.update(&world);
+	{
+	  if(sf::Mouse::getPosition(window).x > 780)
+	    game_window.move(8,0);
+	  if(sf::Mouse::getPosition(window).x < 20)
+	    game_window.move(-8,0);
+	  if(sf::Mouse::getPosition(window).y > 580)
+	    game_window.move(0,8);
+	  if(sf::Mouse::getPosition(window).y < 20)
+	    game_window.move(0,-8);
+
+	  client.update(&world);
+	}
 
       draw();
     }
@@ -56,6 +70,7 @@ void Game::draw()
 {
   window.clear();
 
+  window.setView(game_window);
 
   for(auto enity : world.getEnities())
     {
@@ -65,6 +80,8 @@ void Game::draw()
 
   // TODO: create map sprites 
   // window.draw(sprite);
+
+  window.setView(window.getDefaultView());
 
   window.display();
 }
@@ -87,6 +104,9 @@ void Game::runClient(const std::string& ip)
 
 void Game::runServer()
 {
+  world.addEnity(Enity(sf::Vector2f(100,150),
+		       sf::Vector2f(64,64),
+		       100, "bush1", "bush_01"));
   server.init();
   while(1)
     {

@@ -1,6 +1,8 @@
 #include "Client.hpp"
 #include <iostream>
 
+#define PLAYER_SPEED 4
+
 Client::Client()
 {
 	
@@ -24,19 +26,19 @@ void Client::update(World* world)
 
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
-      world->getEnity(player_id)->position.y -= 1;
+      world->getEnity(player_id)->position.y -= PLAYER_SPEED;
     }
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
-      world->getEnity(player_id)->position.y += 1;
+      world->getEnity(player_id)->position.y += PLAYER_SPEED;
     }
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
-      world->getEnity(player_id)->position.x -= 1;
+      world->getEnity(player_id)->position.x -= PLAYER_SPEED;
     }
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-      world->getEnity(player_id)->position.x += 1;
+      world->getEnity(player_id)->position.x += PLAYER_SPEED;
     }
 
   sf::Packet packet;
