@@ -24,59 +24,74 @@ void Client::update(World* world)
   // Here update
   // Reciving and sending data to server
 
+  static bool player_moved = false;
+
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
-      world->getEnity(player_id)->position.y -= PLAYER_SPEED;
+      world->getPlayer(player_id)->position.y -= PLAYER_SPEED;
+      player_moved = true;
     }
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
-      world->getEnity(player_id)->position.y += PLAYER_SPEED;
+      world->getPlayer(player_id)->position.y += PLAYER_SPEED;
+      player_moved = true;
     }
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
-      world->getEnity(player_id)->position.x -= PLAYER_SPEED;
+      world->getPlayer(player_id)->position.x -= PLAYER_SPEED;
+      player_moved = true;
     }
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-      world->getEnity(player_id)->position.x += PLAYER_SPEED;
+      world->getPlayer(player_id)->position.x += PLAYER_SPEED;
+      player_moved = true;
     }
 
   sf::Packet packet;
   if(socket.receive(packet) == sf::Socket::Status::Done)
     {
       std::string event;
-      Enity enity;
 
       if(packet >> event)
 	{
-	  if(event == "world_update")
+	  if(event == "update world")
 	    {
-	      std::vector<Enity> updated_world;
+	      World new_world;
 	      
-	      if(packet >> updated_world)
+	      if(packet >> new_world)
 		{
-		  world->changeWorld(updated_world);
+		  world->changeWorld(&new_world);
 		}
 	    }
 
-	  if(event == "connected")
+	  if(event == "connect")
 	    {
-	      if(packet >> enity)
+	      Player new_player;
+
+	      if(packet >> new_player)
 		{
-		  player_id = enity.id;
-		  world->addEnity(enity);
+		  player_id = new_player.id;
+		  world->addPlayer(new_player);
 		  std::cout << player_id << " Connected.\n";
 		}
 	    }
 	}
     }
-  
+
   if(update_clock.getElapsedTime().asMilliseconds() > 100)
     {
       sf::Packet update_packet;
-      update_packet << "update_position" << *world->getEnity(player_id);
+      update_packet << "update world";
       socket.send(update_packet);
       update_clock.restart();
+    }
+  
+  if(player_moved)
+    {
+      sf::Packet move_packet;
+      move_packet << "player move" << *world->getPlayer(player_id);
+      socket.send(move_packet);
+      player_moved = false;
     }
 
 }

@@ -29,17 +29,17 @@ void Server::update(World* world)
 	  if (listener.accept(*client) == sf::Socket::Done)
             {
 	      std::string player_id = "player_id__" + std::to_string(reinterpret_cast<uint32_t>(client));
-	      world->addEnity(Enity(sf::Vector2f(100, 100),
-	      			    sf::Vector2f(66, 92),
-	       			    100, "player", player_id));
+	      world->addPlayer(Player(player_id, 
+				      sf::Vector2f(100, 100),
+				      sf::Vector2f(66, 92), 100));
 	      clients.push_back(client);
 	      selector.add(*client);
 
 	      sf::Packet start_packet;
-	      start_packet << "connected" << *world->getEnity(player_id); 
+	      start_packet << "connect" << *world->getPlayer(player_id); 
 	      client->send(start_packet);
 	      
-	      std::cout << "New client.\n";
+	      std::cout << "New client: " << client->getRemoteAddress().toString() << "\n";
             }
 	  else
             {
@@ -59,21 +59,28 @@ void Server::update(World* world)
 		  sf::Packet packet;
 		  if(client.receive(packet) == sf::Socket::Done)
                     {
-		      std::string s;
-		      Enity enity;
+		      std::string event;
 		      
-		      if(packet >> s >> enity)
+		      if(packet >> event)
 			{
-			  if(s == "update_position")
+			  if(event == "player move")
 			    {
-			      world->getEnity(enity.id)->position.x = enity.position.x;
-			      world->getEnity(enity.id)->position.y = enity.position.y;
+			      Player new_player;
+
+			      if(packet >> new_player)
+				{
+				  world->getPlayer(new_player.id)->position.x = new_player.position.x;
+				  world->getPlayer(new_player.id)->position.y = new_player.position.y;
+				}
+			    }
+			  if(event == "update world")
+			    {
+			      sf::Packet send_packet;
+			      send_packet << "update world" << *world;
+			      client.send(send_packet);
 			    }
 			}
 
-		      sf::Packet send_packet;
-		      send_packet << "world_update" << world->getEnities();
-		      client.send(send_packet);
                     }
                 }
             }

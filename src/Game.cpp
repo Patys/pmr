@@ -22,7 +22,7 @@ Game::Game()
   sprites["bush2"] = sf::Sprite(*Assets::Manager::getTexture("bush2"));
   sprites["bush3"] = sf::Sprite(*Assets::Manager::getTexture("bush3"));
 
-  game_window.reset(sf::FloatRect(400, 300, 800, 600));
+  game_window.reset(sf::FloatRect(-100, -100, 800, 600));
 }
 
 Game::~Game()
@@ -50,13 +50,13 @@ void Game::run()
       
       if(focused)
 	{
-	  if(sf::Mouse::getPosition(window).x > 780)
+	  if(sf::Mouse::getPosition(window).x > 790)
 	    game_window.move(8,0);
-	  if(sf::Mouse::getPosition(window).x < 20)
+	  if(sf::Mouse::getPosition(window).x < 10)
 	    game_window.move(-8,0);
-	  if(sf::Mouse::getPosition(window).y > 580)
+	  if(sf::Mouse::getPosition(window).y > 590)
 	    game_window.move(0,8);
-	  if(sf::Mouse::getPosition(window).y < 20)
+	  if(sf::Mouse::getPosition(window).y < 10)
 	    game_window.move(0,-8);
 
 	  client.update(&world);
@@ -72,14 +72,23 @@ void Game::draw()
 
   window.setView(game_window);
 
-  for(auto enity : world.getEnities())
+  for(auto _enity : world.enities)
     {
-      drawEnity(enity.type, enity);
+      drawEnity(_enity.type, _enity);
       window.draw(debug_text);
     }
 
-  // TODO: create map sprites 
-  // window.draw(sprite);
+  for(auto _item : world.items)
+    {
+      drawItem(_item.type, _item);
+      window.draw(debug_text);
+    }
+
+  for(auto _player : world.players)
+    {
+      drawPlayer("player", _player);
+      window.draw(debug_text);
+    }
 
   window.setView(window.getDefaultView());
 
@@ -93,6 +102,24 @@ void Game::drawEnity(const std::string& spriteID, Enity& enity)
 
   debug_text.setPosition(enity.position.x, enity.position.y - 10);
   debug_text.setString(enity.id);
+}
+
+void Game::drawItem(const std::string& spriteID, Item& item)
+{
+  sprites[spriteID].setPosition(item.position);
+  window.draw(sprites[spriteID]);
+
+  debug_text.setPosition(item.position.x, item.position.y - 10);
+  debug_text.setString(item.id);
+}
+
+void Game::drawPlayer(const std::string& spriteID, Player& player)
+{
+  sprites[spriteID].setPosition(player.position);
+  window.draw(sprites[spriteID]);
+
+  debug_text.setPosition(player.position.x, player.position.y - 10);
+  debug_text.setString(player.id);
 }
 
 void Game::runClient(const std::string& ip)
