@@ -16,6 +16,8 @@ public:
   void runClient(const std::string& ip);
   void runServer();
 private:
+  void init();
+
   void run();
 
   void draw();

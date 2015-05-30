@@ -5,6 +5,16 @@
 
 Game::Game()
 {
+
+}
+
+Game::~Game()
+{
+	
+}
+
+void Game::init()
+{
   font.loadFromFile("data/font/Roboto-Regular.ttf");
 
   debug_text.setFont(font);
@@ -25,16 +35,14 @@ Game::Game()
   game_window.reset(sf::FloatRect(-100, -100, 800, 600));
 }
 
-Game::~Game()
-{
-	
-}
-
 void Game::run()
 {
   window.create(sf::VideoMode(800, 600), "Game by Patys");
   window.setFramerateLimit(60);
   bool focused = true;
+
+  init();
+
   while(window.isOpen())
     {
       sf::Event event;
