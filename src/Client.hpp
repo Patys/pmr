@@ -12,7 +12,7 @@ public:
 	
   void init(const std::string& ip);
 	
-  void update(World* world);
+  void update(World* world, std::string& _player_id);
 private:
   sf::TcpSocket socket;
   std::string player_id;

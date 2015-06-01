@@ -32,6 +32,9 @@ void Server::update(World* world)
 	      world->addPlayer(Player(player_id, 
 				      sf::Vector2f(100, 100),
 				      sf::Vector2f(66, 92), 100));
+	      world->getPlayer(player_id)->inventory.push_back(Item(sf::Vector2f(0,0),
+								    sf::Vector2f(34,34),
+								    "item_02", "sword1"));
 	      clients.push_back(client);
 	      selector.add(*client);
 
@@ -50,9 +53,9 @@ void Server::update(World* world)
       else
         {
 	  // The listener socket is not ready, test all other sockets (the clients)
-	  for(auto x : clients)
+	  for(std::size_t x = 0; x < clients.size(); x++)
             {
-	      sf::TcpSocket& client = *x;
+	      sf::TcpSocket& client = *clients[x];
 	      if(selector.isReady(client))
                 {
 		  // The client has sent some data, we can receive it
@@ -80,9 +83,13 @@ void Server::update(World* world)
 			      client.send(send_packet);
 			    }
 			}
-
                     }
-                }
+		  else if(client.receive(packet) == sf::Socket::Disconnected)
+		    {
+		      clients.erase(clients.begin() + x);
+		      std::cout << "Disconnected\n";
+		    }
+		}
             }
         }
     }

@@ -19,12 +19,12 @@ void Client::init(const std::string& ip)
   socket.connect(ip, 28282);
 }
 
-void Client::update(World* world)
+void Client::update(World* world, std::string& _player_id)
 {
   // Here update
   // Reciving and sending data to server
 
-  static bool player_moved = false;
+  bool player_moved = false;
 
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
@@ -71,6 +71,7 @@ void Client::update(World* world)
 	      if(packet >> new_player)
 		{
 		  player_id = new_player.id;
+		  _player_id = player_id;
 		  world->addPlayer(new_player);
 		  std::cout << player_id << " Connected.\n";
 		}
@@ -78,14 +79,6 @@ void Client::update(World* world)
 	}
     }
 
-  if(update_clock.getElapsedTime().asMilliseconds() > 100)
-    {
-      sf::Packet update_packet;
-      update_packet << "update world";
-      socket.send(update_packet);
-      update_clock.restart();
-    }
-  
   if(player_moved)
     {
       sf::Packet move_packet;
@@ -93,5 +86,14 @@ void Client::update(World* world)
       socket.send(move_packet);
       player_moved = false;
     }
+
+  if(update_clock.getElapsedTime().asMilliseconds() > 50)
+    {
+      sf::Packet update_packet;
+      update_packet << "update world";
+      socket.send(update_packet);
+      update_clock.restart();
+    }
+  
 
 }

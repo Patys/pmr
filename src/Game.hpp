@@ -24,6 +24,11 @@ private:
   void drawEnity(const std::string& spriteID, Enity& enity);
   void drawItem(const std::string& spriteID, Item& item);
   void drawPlayer(const std::string& spriteID, Player& player);
+  
+  void drawGUI();
+  void drawInventory();
+
+  bool draw_inventory;
 
   World world;
   sf::Font font;
@@ -34,6 +39,7 @@ private:
   Server server;
 	
   std::string server_ip;
+  std::string player_id;
 	
   sf::RenderWindow window;
   sf::View game_window;
