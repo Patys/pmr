@@ -27,8 +27,11 @@ private:
   
   void drawGUI();
   void drawInventory();
+  void drawHandMenu();
 
   bool draw_inventory;
+  bool draw_hand_menu;
+  sf::Vector2f position_hand_menu;
 
   World world;
   sf::Font font;

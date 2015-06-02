@@ -32,7 +32,11 @@ void Game::init()
   Assets::Manager::loadTexture("sword1", "data/gfx/sword.png");
 
   Assets::Manager::loadTexture("gui_inventory", "data/gfx/basket.png");
-  Assets::Manager::loadTexture("gui_panel", "data/gfx/panel_brown.png");
+  Assets::Manager::loadTexture("gui_panel", "data/gfx/panel_gui.png");
+  Assets::Manager::loadTexture("gui_cross", "data/gfx/cross.png");
+  Assets::Manager::loadTexture("gui_info", "data/gfx/information.png");
+  Assets::Manager::loadTexture("gui_wrench", "data/gfx/wrench.png");
+  Assets::Manager::loadTexture("gui_pick", "data/gfx/export.png");
 
   sprites["player"] = sf::Sprite(*Assets::Manager::getTexture("player"));
 
@@ -46,8 +50,13 @@ void Game::init()
 
   sprites["gui_inventory"] = sf::Sprite(*Assets::Manager::getTexture("gui_inventory"));
   sprites["gui_panel"] = sf::Sprite(*Assets::Manager::getTexture("gui_panel"));
+  sprites["gui_cross"] = sf::Sprite(*Assets::Manager::getTexture("gui_cross"));
+  sprites["gui_info"] = sf::Sprite(*Assets::Manager::getTexture("gui_info"));
+  sprites["gui_wrench"] = sf::Sprite(*Assets::Manager::getTexture("gui_wrench"));
+  sprites["gui_pick"] = sf::Sprite(*Assets::Manager::getTexture("gui_pick"));
 
   draw_inventory = false;
+  draw_hand_menu = false;
 
   game_window.reset(sf::FloatRect(-100, -100, 800, 600));
 }
@@ -77,6 +86,21 @@ void Game::run()
 		 event.mouseButton.y > 550 && event.mouseButton.y < 600)
 		{
 		  draw_inventory = !draw_inventory;
+		}
+
+	      draw_hand_menu = false;
+	      sf::Vector2f mouse_pos = (sf::Vector2f)sf::Mouse::getPosition(window);
+	      sf::Vector2f world_pos = game_window.getCenter() - sf::Vector2f(400,300);
+	      for(auto x : world.items)
+		{
+		  if(x.position.x < mouse_pos.x + world_pos.x && 
+		     x.position.x + x.size.x > mouse_pos.x + world_pos.x &&
+		     x.position.y < mouse_pos.y + world_pos.y &&
+		     x.position.y + x.size.y > mouse_pos.y + world_pos.y)
+		    {
+		      draw_hand_menu = !draw_hand_menu;
+		      position_hand_menu = mouse_pos + world_pos;
+		    }
 		}
 	    }
         }
@@ -123,6 +147,9 @@ void Game::draw()
       window.draw(debug_text);
     }
 
+  if(draw_hand_menu)
+    drawHandMenu();
+
   window.setView(window.getDefaultView());
   
   drawGUI();
@@ -167,14 +194,31 @@ void Game::drawGUI()
 
 void Game::drawInventory()
 {
-  sprites["gui_panel"].setScale(6,4);
   sprites["gui_panel"].setPosition(100,100);
   window.draw(sprites["gui_panel"]);
 
+  sf::RectangleShape inv_rect(sf::Vector2f(64,64));
+  inv_rect.setFillColor(sf::Color::Transparent);
+  inv_rect.setOutlineThickness(2);
+  inv_rect.setOutlineColor(sf::Color::White);
   sf::Vector2f pos(0,0);
+
+  for(std::size_t i = 0; i < 40; i++)
+    {
+      inv_rect.setPosition(pos.x * 67 + 135, pos.y * 67 + 150);
+      window.draw(inv_rect);
+      pos.x++;
+      if(pos.x >= 8)
+	{
+	  pos.x = 0;
+	  pos.y++;
+	}
+    }
+  pos.x = 0;
+  pos.y = 0;
   for(auto x : world.getPlayer(player_id)->inventory)
     {
-      sprites[x.type].setPosition(pos.x * 36 + 130, pos.y * 36 + 150);
+      sprites[x.type].setPosition(pos.x * 67 + 135, pos.y * 67 + 150);
       window.draw(sprites[x.type]);
       
       pos.x++;
@@ -184,6 +228,19 @@ void Game::drawInventory()
 	  pos.y++;
 	}
     }
+}
+
+void Game::drawHandMenu()
+{
+  sprites["gui_cross"].setPosition(position_hand_menu.x - 32, position_hand_menu.y - 64);
+  sprites["gui_info"].setPosition(position_hand_menu.x - 32, position_hand_menu.y);
+  sprites["gui_pick"].setPosition(position_hand_menu.x - 64, position_hand_menu.y-32);
+  sprites["gui_wrench"].setPosition(position_hand_menu.x, position_hand_menu.y-32);
+
+  window.draw(sprites["gui_cross"]);
+  window.draw(sprites["gui_info"]);
+  window.draw(sprites["gui_pick"]);
+  window.draw(sprites["gui_wrench"]);
 }
 
 void Game::runClient(const std::string& ip)
@@ -215,11 +272,11 @@ void setupWorld(World* world)
 			100, "tree1", "tree_01"));
 
   world->addItem(Item(sf::Vector2f(300,200),
-		      sf::Vector2f(34,34),
+		      sf::Vector2f(64,64),
 		      "item_01", "axe1"));
 
   world->addItem(Item(sf::Vector2f(350,200),
-		      sf::Vector2f(34,34),
+		      sf::Vector2f(64,64),
 		      "item_02", "sword1"));
   
 }
