@@ -30,8 +30,10 @@ private:
   void drawHandMenu();
 
   bool draw_inventory;
+
   bool draw_hand_menu;
   sf::Vector2f position_hand_menu;
+  std::string selected_item;
 
   World world;
   sf::Font font;

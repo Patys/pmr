@@ -22,12 +22,15 @@ public:
 
   void addEnity(Enity enity);
   Enity* getEnity(const std::string& id);
+  void removeEnity(const std::string& id);
 
   void addItem(Item item);
   Item* getItem(const std::string& id);
+  void removeItem(const std::string& id);
 
   void addPlayer(Player player);
   Player* getPlayer(const std::string& id);
+  void removePlayer(const std::string& id);
 
   std::vector<Enity> enities;
   std::vector<Item> items;

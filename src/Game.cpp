@@ -82,15 +82,36 @@ void Game::run()
 	    focused = true;
 	  if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 	    {
-	      if(event.mouseButton.x > 750 && event.mouseButton.x < 800 &&
-		 event.mouseButton.y > 550 && event.mouseButton.y < 600)
+	      sf::Vector2f mouse_pos = (sf::Vector2f)sf::Mouse::getPosition(window);
+	      sf::Vector2f world_pos = game_window.getCenter() - sf::Vector2f(400,300);
+
+	      if(mouse_pos.x > 750 && mouse_pos.x < 800 &&
+		 mouse_pos.y > 550 && mouse_pos.y < 600)
 		{
 		  draw_inventory = !draw_inventory;
 		}
 
+	      if(draw_hand_menu)
+		{
+		  // click on cross
+		  if(mouse_pos.x + world_pos.x > position_hand_menu.x - 32 &&
+		     mouse_pos.x + world_pos.x < position_hand_menu.x &&
+		     mouse_pos.y + world_pos.y > position_hand_menu.y - 64 &&
+		     mouse_pos.y + world_pos.y < position_hand_menu.y)
+		    {
+		      client.runCommand("destroy item", selected_item);
+		    }
+		  // pick up
+		  if(mouse_pos.x + world_pos.x > position_hand_menu.x - 64 &&
+		     mouse_pos.x + world_pos.x < position_hand_menu.x &&
+		     mouse_pos.y + world_pos.y > position_hand_menu.y - 32 &&
+		     mouse_pos.y + world_pos.y < position_hand_menu.y)
+		    {
+		      client.runCommand("pick up", selected_item);
+		    }
+		}
+
 	      draw_hand_menu = false;
-	      sf::Vector2f mouse_pos = (sf::Vector2f)sf::Mouse::getPosition(window);
-	      sf::Vector2f world_pos = game_window.getCenter() - sf::Vector2f(400,300);
 	      for(auto x : world.items)
 		{
 		  if(x.position.x < mouse_pos.x + world_pos.x && 
@@ -98,6 +119,7 @@ void Game::run()
 		     x.position.y < mouse_pos.y + world_pos.y &&
 		     x.position.y + x.size.y > mouse_pos.y + world_pos.y)
 		    {
+		      selected_item = x.id;
 		      draw_hand_menu = !draw_hand_menu;
 		      position_hand_menu = mouse_pos + world_pos;
 		    }

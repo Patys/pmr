@@ -94,6 +94,20 @@ void Client::update(World* world, std::string& _player_id)
       socket.send(update_packet);
       update_clock.restart();
     }
-  
+}
 
+void Client::runCommand(const std::string& command, const std::string& id)
+{
+  if(command == "destroy item")
+    {
+      sf::Packet packet;
+      packet << "destroy item" << id;
+      socket.send(packet);
+    }
+  if(command == "pick up")
+    {
+      sf::Packet packet;
+      packet << "pick up" << id << player_id;
+      socket.send(packet);
+    }
 }

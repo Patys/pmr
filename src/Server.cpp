@@ -82,6 +82,31 @@ void Server::update(World* world)
 			      send_packet << "update world" << *world;
 			      client.send(send_packet);
 			    }
+			  if(event == "destroy item")
+			    {
+			      std::string item_id;
+			      
+			      if(packet >> item_id)
+				{
+				  world->removeItem(item_id);
+				}
+			    }
+			  if(event == "pick up")
+			    {
+			      std::string item_id;
+			      std::string player_id;
+			      
+			      if(packet >> item_id >> player_id)
+				{
+				  if(world->getPlayer(player_id)->inventory.size() <= 40)
+				    {
+				      Item item;
+				      item = *world->getItem(item_id);
+				      world->getPlayer(player_id)->inventory.push_back(item);
+				      world->removeItem(item_id);
+				    }
+				}
+			    }
 			}
                     }
 		  else if(client.receive(packet) == sf::Socket::Disconnected)
