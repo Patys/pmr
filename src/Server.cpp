@@ -98,12 +98,18 @@ void Server::update(World* world)
 			      
 			      if(packet >> item_id >> player_id)
 				{
-				  if(world->getPlayer(player_id)->inventory.size() <= 40)
+				  auto _player = world->getPlayer(player_id);
+				  if(_player)
 				    {
-				      Item item;
-				      item = *world->getItem(item_id);
-				      world->getPlayer(player_id)->inventory.push_back(item);
-				      world->removeItem(item_id);
+				      if(_player->inventory.size() <= 10)
+					{
+					  auto item = world->getItem(item_id);
+					  if(item)
+					    {
+					      world->getPlayer(player_id)->inventory.push_back(*item);
+					      world->removeItem(item_id);
+					    }
+					}
 				    }
 				}
 			    }

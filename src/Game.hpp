@@ -29,11 +29,11 @@ private:
   void drawInventory();
   void drawHandMenu();
 
-  bool draw_inventory;
+  int selected_item_in_inventory;
 
-  bool draw_hand_menu;
+  bool hand_menu_active;
   sf::Vector2f position_hand_menu;
-  std::string selected_item;
+  std::string selected_item_in_world;
 
   World world;
   sf::Font font;

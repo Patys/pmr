@@ -55,9 +55,9 @@ void Game::init()
   sprites["gui_wrench"] = sf::Sprite(*Assets::Manager::getTexture("gui_wrench"));
   sprites["gui_pick"] = sf::Sprite(*Assets::Manager::getTexture("gui_pick"));
 
-  draw_inventory = false;
-  draw_hand_menu = false;
-
+  hand_menu_active = false;
+  selected_item_in_inventory = 0;
+  
   game_window.reset(sf::FloatRect(-100, -100, 800, 600));
 }
 
@@ -85,13 +85,7 @@ void Game::run()
 	      sf::Vector2f mouse_pos = (sf::Vector2f)sf::Mouse::getPosition(window);
 	      sf::Vector2f world_pos = game_window.getCenter() - sf::Vector2f(400,300);
 
-	      if(mouse_pos.x > 750 && mouse_pos.x < 800 &&
-		 mouse_pos.y > 550 && mouse_pos.y < 600)
-		{
-		  draw_inventory = !draw_inventory;
-		}
-
-	      if(draw_hand_menu)
+	      if(hand_menu_active)
 		{
 		  // click on cross
 		  if(mouse_pos.x + world_pos.x > position_hand_menu.x - 32 &&
@@ -99,7 +93,8 @@ void Game::run()
 		     mouse_pos.y + world_pos.y > position_hand_menu.y - 64 &&
 		     mouse_pos.y + world_pos.y < position_hand_menu.y)
 		    {
-		      client.runCommand("destroy item", selected_item);
+		      client.runCommand("destroy item", selected_item_in_world);
+		      hand_menu_active = false;
 		    }
 		  // pick up
 		  if(mouse_pos.x + world_pos.x > position_hand_menu.x - 64 &&
@@ -107,11 +102,12 @@ void Game::run()
 		     mouse_pos.y + world_pos.y > position_hand_menu.y - 32 &&
 		     mouse_pos.y + world_pos.y < position_hand_menu.y)
 		    {
-		      client.runCommand("pick up", selected_item);
+		      client.runCommand("pick up", selected_item_in_world);
+		      hand_menu_active = false;
 		    }
 		}
 
-	      draw_hand_menu = false;
+	      hand_menu_active = false;
 	      for(auto x : world.items)
 		{
 		  if(x.position.x < mouse_pos.x + world_pos.x && 
@@ -119,16 +115,38 @@ void Game::run()
 		     x.position.y < mouse_pos.y + world_pos.y &&
 		     x.position.y + x.size.y > mouse_pos.y + world_pos.y)
 		    {
-		      selected_item = x.id;
-		      draw_hand_menu = !draw_hand_menu;
+		      selected_item_in_world = x.id;
+		      hand_menu_active = true;
 		      position_hand_menu = mouse_pos + world_pos;
 		    }
 		}
+		
 	    }
         }
       
       if(focused)
 	{
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
+	    selected_item_in_inventory = 0;
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
+	    selected_item_in_inventory = 1;
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
+	    selected_item_in_inventory = 2;
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
+	    selected_item_in_inventory = 3;
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
+	    selected_item_in_inventory = 4;
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num6))
+	    selected_item_in_inventory = 5;
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num7))
+	    selected_item_in_inventory = 6;
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num8))
+	    selected_item_in_inventory = 7;
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num9))
+	    selected_item_in_inventory = 8;
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
+	    selected_item_in_inventory = 9;
+
 	  if(sf::Mouse::getPosition(window).x > 795)
 	    game_window.move(8,0);
 	  if(sf::Mouse::getPosition(window).x < 5)
@@ -169,14 +187,12 @@ void Game::draw()
       window.draw(debug_text);
     }
 
-  if(draw_hand_menu)
+  if(hand_menu_active)
     drawHandMenu();
 
   window.setView(window.getDefaultView());
   
-  drawGUI();
-  if(draw_inventory)
-    drawInventory();
+  drawInventory();
 
   window.display();
 }
@@ -210,46 +226,38 @@ void Game::drawPlayer(const std::string& spriteID, Player& player)
 
 void Game::drawGUI()
 {
-  sprites["gui_inventory"].setPosition(750,550);
-  window.draw(sprites["gui_inventory"]);
+
 }
 
 void Game::drawInventory()
 {
-  sprites["gui_panel"].setPosition(100,100);
-  window.draw(sprites["gui_panel"]);
-
   sf::RectangleShape inv_rect(sf::Vector2f(64,64));
   inv_rect.setFillColor(sf::Color::Transparent);
   inv_rect.setOutlineThickness(2);
   inv_rect.setOutlineColor(sf::Color::White);
+
+  sf::RectangleShape select_inv_rect(sf::Vector2f(64,64));
+  select_inv_rect.setFillColor(sf::Color::Transparent);
+  select_inv_rect.setOutlineThickness(2);
+  select_inv_rect.setOutlineColor(sf::Color::Green);
   sf::Vector2f pos(0,0);
 
-  for(std::size_t i = 0; i < 40; i++)
+  for(std::size_t i = 0; i < 10; i++)
     {
-      inv_rect.setPosition(pos.x * 67 + 135, pos.y * 67 + 150);
+      inv_rect.setPosition(pos.x * 65+80, 534);
       window.draw(inv_rect);
       pos.x++;
-      if(pos.x >= 8)
-	{
-	  pos.x = 0;
-	  pos.y++;
-	}
     }
   pos.x = 0;
-  pos.y = 0;
   for(auto x : world.getPlayer(player_id)->inventory)
     {
-      sprites[x.type].setPosition(pos.x * 67 + 135, pos.y * 67 + 150);
+      sprites[x.type].setPosition(pos.x * 65+80, 534);
       window.draw(sprites[x.type]);
       
       pos.x++;
-      if(pos.x > 8)
-	{
-	  pos.x = 0;
-	  pos.y++;
-	}
     }
+  select_inv_rect.setPosition(selected_item_in_inventory * 65+80, 534);
+  window.draw(select_inv_rect);
 }
 
 void Game::drawHandMenu()
