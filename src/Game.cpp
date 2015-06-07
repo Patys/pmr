@@ -85,6 +85,17 @@ void Game::run()
 	      sf::Vector2f mouse_pos = (sf::Vector2f)sf::Mouse::getPosition(window);
 	      sf::Vector2f world_pos = game_window.getCenter() - sf::Vector2f(400,300);
 
+	      for(auto x : world.enities)
+		{
+		  if(mouse_pos.x + world_pos.x > x.position.x &&
+		     mouse_pos.x + world_pos.x < x.position.x + x.size.x &&
+		     mouse_pos.y + world_pos.y > x.position.y &&
+		     mouse_pos.y + world_pos.y < x.position.y + x.size.y)
+		    {
+		      client.runCommand("attack enity", x.id);
+		    }
+		}
+
 	      if(hand_menu_active)
 		{
 		  // click on cross

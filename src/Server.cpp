@@ -134,6 +134,23 @@ void Server::update(World* world)
 				    }
 				}
 			    }
+			  if(event == "attack enity")
+			    {
+			      std::string enity_id;
+			      
+			      if(packet >> enity_id)
+				{
+				  auto enity = world->getEnity(enity_id);
+				  if(enity)
+				    {
+				      enity->life -= 10;
+				      if(enity->life <= 0)
+					{
+					  world->removeEnity(enity_id);
+					}
+				    }
+				}
+			    }
 			}
                     }
 		  else if(client.receive(packet) == sf::Socket::Disconnected)
