@@ -110,4 +110,10 @@ void Client::runCommand(const std::string& command, const std::string& id)
       packet << "pick up" << id << player_id;
       socket.send(packet);
     }
+  if(command == "drop item")
+    {
+      sf::Packet packet;
+      packet << "drop item" << id << player_id;
+      socket.send(packet);
+    }
 }

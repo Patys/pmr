@@ -32,9 +32,6 @@ void Server::update(World* world)
 	      world->addPlayer(Player(player_id, 
 				      sf::Vector2f(100, 100),
 				      sf::Vector2f(66, 92), 100));
-	      world->getPlayer(player_id)->inventory.push_back(Item(sf::Vector2f(0,0),
-								    sf::Vector2f(34,34),
-								    "item_02", "sword1"));
 	      clients.push_back(client);
 	      selector.add(*client);
 
@@ -110,6 +107,30 @@ void Server::update(World* world)
 					      world->removeItem(item_id);
 					    }
 					}
+				    }
+				}
+			    }
+			  if(event == "drop item")
+			    {
+			      std::string item_id;
+			      std::string player_id;
+			      
+			      if(packet >> item_id >> player_id)
+				{
+				  auto _player = world->getPlayer(player_id);
+				  if(_player)
+				    {
+				      Item item;
+				      for(std::size_t i = 0; i < _player->inventory.size(); i++)
+					{
+					  if(_player->inventory[i].id == item_id)
+					    {
+					      item = _player->inventory[i];
+					      item.position = _player->position;
+					      world->addItem(item);
+					      _player->inventory.erase(_player->inventory.begin() + i);
+					    }
+				        }
 				    }
 				}
 			    }

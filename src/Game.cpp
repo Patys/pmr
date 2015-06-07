@@ -121,7 +121,19 @@ void Game::run()
 		    }
 		}
 		
+	    } 
+	  if (event.type == sf::Event::KeyReleased)
+	    {
+	      if(event.key.code == sf::Keyboard::Q)
+		{
+		  if(selected_item_in_inventory < world.getPlayer(player_id)->inventory.size())
+		    {
+		      Item item = world.getPlayer(player_id)->inventory[selected_item_in_inventory];
+		      client.runCommand("drop item", item.id);
+		    }
+		}
 	    }
+	 
         }
       
       if(focused)
