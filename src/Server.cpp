@@ -65,12 +65,18 @@ void Server::update(World* world)
 			{
 			  if(event == "player move")
 			    {
-			      Player new_player;
-
-			      if(packet >> new_player)
+			      std::string player_id;
+			      std::string direction;
+			      if(packet >> direction >> player_id)
 				{
-				  world->getPlayer(new_player.id)->position.x = new_player.position.x;
-				  world->getPlayer(new_player.id)->position.y = new_player.position.y;
+				  if(direction == "up")
+				    world->getPlayer(player_id)->position.y -= 5;
+				  if(direction == "down")
+				    world->getPlayer(player_id)->position.y += 5;
+				  if(direction == "left")
+				    world->getPlayer(player_id)->position.x -= 5;
+				  if(direction == "right")
+				    world->getPlayer(player_id)->position.x += 5;
 				}
 			    }
 			  if(event == "update world")

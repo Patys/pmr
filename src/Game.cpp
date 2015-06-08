@@ -170,6 +170,15 @@ void Game::run()
 	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
 	    selected_item_in_inventory = 9;
 
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	    client.runCommand("player move", "up");
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	    client.runCommand("player move", "down");
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	    client.runCommand("player move", "left");
+	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	    client.runCommand("player move", "right");
+
 	  if(sf::Mouse::getPosition(window).x > 795)
 	    game_window.move(8,0);
 	  if(sf::Mouse::getPosition(window).x < 5)
