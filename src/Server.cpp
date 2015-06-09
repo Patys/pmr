@@ -152,6 +152,15 @@ void Server::update(World* world)
 				      enity->life -= 10;
 				      if(enity->life <= 0)
 					{
+					  if(enity->type == "tree1")
+					    {
+					      Item item;
+					      item.position = enity->position + sf::Vector2f(16,96);
+					      item.size = sf::Vector2f(32,32);
+					      item.id = "wood_" + std::to_string(reinterpret_cast<uint32_t>(enity));
+					      item.type = "wood1";
+					      world->addItem(item);
+					    }
 					  world->removeEnity(enity_id);
 					}
 				    }

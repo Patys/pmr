@@ -30,6 +30,7 @@ void Game::init()
 
   Assets::Manager::loadTexture("axe1", "data/gfx/axe.png");
   Assets::Manager::loadTexture("sword1", "data/gfx/sword.png");
+  Assets::Manager::loadTexture("wood1", "data/gfx/wood.png");
 
   Assets::Manager::loadTexture("gui_inventory", "data/gfx/basket.png");
   Assets::Manager::loadTexture("gui_panel", "data/gfx/panel_gui.png");
@@ -44,6 +45,7 @@ void Game::init()
   sprites["bush2"] = sf::Sprite(*Assets::Manager::getTexture("bush2"));
   sprites["bush3"] = sf::Sprite(*Assets::Manager::getTexture("bush3"));
   sprites["tree1"] = sf::Sprite(*Assets::Manager::getTexture("tree1"));
+  sprites["wood1"] = sf::Sprite(*Assets::Manager::getTexture("wood1"));
 
   sprites["axe1"] = sf::Sprite(*Assets::Manager::getTexture("axe1"));
   sprites["sword1"] = sf::Sprite(*Assets::Manager::getTexture("sword1"));
@@ -74,6 +76,9 @@ void Game::run()
       sf::Event event;
       while (window.pollEvent(event))
         {
+	  sf::Vector2f mouse_pos = (sf::Vector2f)sf::Mouse::getPosition(window);
+	  sf::Vector2f world_pos = game_window.getCenter() - sf::Vector2f(400,300);
+
 	  if (event.type == sf::Event::Closed)
 	    window.close();
 	  if (event.type == sf::Event::LostFocus)
@@ -82,9 +87,6 @@ void Game::run()
 	    focused = true;
 	  if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 	    {
-	      sf::Vector2f mouse_pos = (sf::Vector2f)sf::Mouse::getPosition(window);
-	      sf::Vector2f world_pos = game_window.getCenter() - sf::Vector2f(400,300);
-
 	      for(auto x : world.enities)
 		{
 		  if(mouse_pos.x + world_pos.x > x.position.x &&
@@ -96,6 +98,23 @@ void Game::run()
 		    }
 		}
 
+	      hand_menu_active = false;
+	      for(auto x : world.items)
+		{
+		  if(x.position.x < mouse_pos.x + world_pos.x && 
+		     x.position.x + x.size.x > mouse_pos.x + world_pos.x &&
+		     x.position.y < mouse_pos.y + world_pos.y &&
+		     x.position.y + x.size.y > mouse_pos.y + world_pos.y)
+		    {
+		      selected_item_in_world = x.id;
+		      hand_menu_active = true;
+		      position_hand_menu = mouse_pos + world_pos;
+		    }
+		}
+		
+	    } 
+	  if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+	    {
 	      if(hand_menu_active)
 		{
 		  // click on cross
@@ -117,22 +136,7 @@ void Game::run()
 		      hand_menu_active = false;
 		    }
 		}
-
-	      hand_menu_active = false;
-	      for(auto x : world.items)
-		{
-		  if(x.position.x < mouse_pos.x + world_pos.x && 
-		     x.position.x + x.size.x > mouse_pos.x + world_pos.x &&
-		     x.position.y < mouse_pos.y + world_pos.y &&
-		     x.position.y + x.size.y > mouse_pos.y + world_pos.y)
-		    {
-		      selected_item_in_world = x.id;
-		      hand_menu_active = true;
-		      position_hand_menu = mouse_pos + world_pos;
-		    }
-		}
-		
-	    } 
+	    }
 	  if (event.type == sf::Event::KeyReleased)
 	    {
 	      if(event.key.code == sf::Keyboard::Q)
