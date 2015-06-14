@@ -118,19 +118,19 @@ void Game::run()
 	      if(hand_menu_active)
 		{
 		  // click on cross
-		  if(mouse_pos.x + world_pos.x > position_hand_menu.x - 32 &&
-		     mouse_pos.x + world_pos.x < position_hand_menu.x &&
-		     mouse_pos.y + world_pos.y > position_hand_menu.y - 64 &&
-		     mouse_pos.y + world_pos.y < position_hand_menu.y)
+		  if(mouse_pos.x + world_pos.x > position_hand_menu.x - 25 &&
+		     mouse_pos.x + world_pos.x < position_hand_menu.x + 25 &&
+		     mouse_pos.y + world_pos.y > position_hand_menu.y - 75 &&
+		     mouse_pos.y + world_pos.y < position_hand_menu.y - 25)
 		    {
 		      client.runCommand("destroy item", selected_item_in_world);
 		      hand_menu_active = false;
 		    }
 		  // pick up
-		  if(mouse_pos.x + world_pos.x > position_hand_menu.x - 64 &&
-		     mouse_pos.x + world_pos.x < position_hand_menu.x &&
-		     mouse_pos.y + world_pos.y > position_hand_menu.y - 32 &&
-		     mouse_pos.y + world_pos.y < position_hand_menu.y)
+		  if(mouse_pos.x + world_pos.x > position_hand_menu.x - 75 &&
+		     mouse_pos.x + world_pos.x < position_hand_menu.x - 25 &&
+		     mouse_pos.y + world_pos.y > position_hand_menu.y - 25 &&
+		     mouse_pos.y + world_pos.y < position_hand_menu.y + 25)
 		    {
 		      client.runCommand("pick up", selected_item_in_world);
 		      hand_menu_active = false;
@@ -298,10 +298,10 @@ void Game::drawInventory()
 
 void Game::drawHandMenu()
 {
-  sprites["gui_cross"].setPosition(position_hand_menu.x - 32, position_hand_menu.y - 64);
-  sprites["gui_info"].setPosition(position_hand_menu.x - 32, position_hand_menu.y);
-  sprites["gui_pick"].setPosition(position_hand_menu.x - 64, position_hand_menu.y-32);
-  sprites["gui_wrench"].setPosition(position_hand_menu.x, position_hand_menu.y-32);
+  sprites["gui_cross"].setPosition(position_hand_menu.x - 25, position_hand_menu.y - 75);
+  sprites["gui_info"].setPosition(position_hand_menu.x + 25, position_hand_menu.y - 25);
+  sprites["gui_pick"].setPosition(position_hand_menu.x - 75, position_hand_menu.y - 25);
+  sprites["gui_wrench"].setPosition(position_hand_menu.x - 25, position_hand_menu.y + 25);
 
   window.draw(sprites["gui_cross"]);
   window.draw(sprites["gui_info"]);
