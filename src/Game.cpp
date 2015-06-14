@@ -58,6 +58,7 @@ void Game::init()
   sprites["gui_pick"] = sf::Sprite(*Assets::Manager::getTexture("gui_pick"));
 
   hand_menu_active = false;
+  draw_item_description = false;
   selected_item_in_inventory = 0;
   
   game_window.reset(sf::FloatRect(-100, -100, 800, 600));
@@ -115,7 +116,7 @@ void Game::run()
 	    } 
 	  if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 	    {
-	      if(hand_menu_active)
+	      if(hand_menu_active && !draw_item_description)
 		{
 		  // click on cross
 		  if(mouse_pos.x + world_pos.x > position_hand_menu.x - 25 &&
@@ -135,6 +136,15 @@ void Game::run()
 		      client.runCommand("pick up", selected_item_in_world);
 		      hand_menu_active = false;
 		    }
+		  // info
+		  if(mouse_pos.x + world_pos.x > position_hand_menu.x + 25 &&
+		     mouse_pos.x + world_pos.x < position_hand_menu.x + 75 &&
+		     mouse_pos.y + world_pos.y > position_hand_menu.y - 25 &&
+		     mouse_pos.y + world_pos.y < position_hand_menu.y + 75)
+		    {
+		      draw_item_description = true;
+		      hand_menu_active = false;
+		    }
 		}
 	    }
 	  if (event.type == sf::Event::KeyReleased)
@@ -146,6 +156,10 @@ void Game::run()
 		      Item item = world.getPlayer(player_id)->inventory[selected_item_in_inventory];
 		      client.runCommand("drop item", item.id);
 		    }
+		}
+	      if(event.key.code == sf::Keyboard::Escape)
+		{
+		  draw_item_description = false;
 		}
 	    }
 	 
@@ -229,7 +243,12 @@ void Game::draw()
   window.setView(window.getDefaultView());
   
   drawInventory();
-
+  if(draw_item_description)
+    {
+      auto item = world.getItem(selected_item_in_world);
+      if(item)
+	drawItemDescription(getItemDescription(item->type));
+    }
   window.display();
 }
 
@@ -294,6 +313,15 @@ void Game::drawInventory()
     }
   select_inv_rect.setPosition(selected_item_in_inventory * 65+80, 534);
   window.draw(select_inv_rect);
+}
+
+void Game::drawItemDescription(const std::string& description)
+{
+  sprites["gui_panel"].setPosition(75,20);
+  window.draw(sprites["gui_panel"]);
+  sf::Text des_text(description.c_str(), font, 18);
+  des_text.setPosition(100,100);
+  window.draw(des_text);
 }
 
 void Game::drawHandMenu()

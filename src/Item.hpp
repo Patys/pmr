@@ -19,6 +19,8 @@ public:
 
 };
 
+const std::string& getItemDescription(const std::string& type);
+
 sf::Packet& operator <<(sf::Packet& packet, const Item& m);
 sf::Packet& operator >>(sf::Packet& packet, Item& m);
 

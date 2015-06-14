@@ -29,6 +29,9 @@ private:
   void drawInventory();
   void drawHandMenu();
 
+  void drawItemDescription(const std::string& description);
+  bool draw_item_description;
+
   int selected_item_in_inventory;
 
   bool hand_menu_active;
