@@ -88,34 +88,47 @@ void Game::run()
 	    focused = true;
 	  if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 	    {
-	      for(auto x : world.enities)
+	      if(!draw_item_description)
 		{
-		  if(mouse_pos.x + world_pos.x > x.position.x &&
-		     mouse_pos.x + world_pos.x < x.position.x + x.size.x &&
-		     mouse_pos.y + world_pos.y > x.position.y &&
-		     mouse_pos.y + world_pos.y < x.position.y + x.size.y)
+		  for(auto x : world.enities)
 		    {
-		      client.runCommand("attack enity", x.id);
+		      if(mouse_pos.x + world_pos.x > x.position.x &&
+			 mouse_pos.x + world_pos.x < x.position.x + x.size.x &&
+			 mouse_pos.y + world_pos.y > x.position.y &&
+			 mouse_pos.y + world_pos.y < x.position.y + x.size.y)
+			{
+			  client.runCommand("attack enity", x.id);
+			}
 		    }
-		}
 
-	      hand_menu_active = false;
-	      for(auto x : world.items)
-		{
-		  if(x.position.x < mouse_pos.x + world_pos.x && 
-		     x.position.x + x.size.x > mouse_pos.x + world_pos.x &&
-		     x.position.y < mouse_pos.y + world_pos.y &&
-		     x.position.y + x.size.y > mouse_pos.y + world_pos.y)
+		  hand_menu_active = false;
+		  for(auto x : world.items)
 		    {
-		      selected_item_in_world = x.id;
-		      hand_menu_active = true;
-		      position_hand_menu = mouse_pos + world_pos;
+		      if(x.position.x < mouse_pos.x + world_pos.x && 
+			 x.position.x + x.size.x > mouse_pos.x + world_pos.x &&
+			 x.position.y < mouse_pos.y + world_pos.y &&
+			 x.position.y + x.size.y > mouse_pos.y + world_pos.y)
+			{
+			  selected_item_in_world = x.id;
+			  hand_menu_active = true;
+			  position_hand_menu = mouse_pos + world_pos;
+			}
 		    }
 		}
 		
 	    } 
 	  if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 	    {
+	      if(draw_item_description)
+		{
+		  if(mouse_pos.x > 100 &&
+		     mouse_pos.x < 150 &&
+		     mouse_pos.y > 45 &&
+		     mouse_pos.y < 95)
+		    {
+		      draw_item_description = false;
+		    }
+		}
 	      if(hand_menu_active && !draw_item_description)
 		{
 		  // click on cross
@@ -149,12 +162,15 @@ void Game::run()
 	    }
 	  if (event.type == sf::Event::KeyReleased)
 	    {
-	      if(event.key.code == sf::Keyboard::Q)
+	      if(!draw_item_description)
 		{
-		  if(selected_item_in_inventory < world.getPlayer(player_id)->inventory.size())
+		  if(event.key.code == sf::Keyboard::Q)
 		    {
-		      Item item = world.getPlayer(player_id)->inventory[selected_item_in_inventory];
-		      client.runCommand("drop item", item.id);
+		      if(selected_item_in_inventory < world.getPlayer(player_id)->inventory.size())
+			{
+			  Item item = world.getPlayer(player_id)->inventory[selected_item_in_inventory];
+			  client.runCommand("drop item", item.id);
+			}
 		    }
 		}
 	      if(event.key.code == sf::Keyboard::Escape)
@@ -317,8 +333,10 @@ void Game::drawInventory()
 
 void Game::drawItemDescription(const std::string& description)
 {
+  sprites["gui_cross"].setPosition(100,45);
   sprites["gui_panel"].setPosition(75,20);
   window.draw(sprites["gui_panel"]);
+  window.draw(sprites["gui_cross"]);
   sf::Text des_text(description.c_str(), font, 18);
   des_text.setPosition(100,100);
   window.draw(des_text);
