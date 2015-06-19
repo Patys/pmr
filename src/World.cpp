@@ -1,5 +1,12 @@
 #include "World.hpp"
 
+void World::changeWorld(World* world)
+{
+  enities.clear(); enities.swap(world->enities);
+  items.clear(); items.swap(world->items);
+  players.clear(); players.swap(world->players);
+}
+
 void World::addEnity(Enity enity)
 {
   enities.push_back(enity);
@@ -95,4 +102,23 @@ sf::Packet& operator <<(sf::Packet& packet, const World& m)
 sf::Packet& operator >>(sf::Packet& packet, World& m)
 {
   return packet >> m.enities >> m.items >> m.players;
+}
+
+void setupWorld(World* world)
+{
+  world->addEnity(Enity(sf::Vector2f(100,150),
+			sf::Vector2f(64,64),
+			100, "bush1", "bush_01"));
+  world->addEnity(Enity(sf::Vector2f(200,200),
+			sf::Vector2f(64,128),
+			100, "tree1", "tree_01"));
+
+  world->addItem(Item(sf::Vector2f(300,200),
+		      sf::Vector2f(64,64),
+		      "item_01", "axe1"));
+
+  world->addItem(Item(sf::Vector2f(350,200),
+		      sf::Vector2f(64,64),
+		      "item_02", "sword1"));
+  
 }

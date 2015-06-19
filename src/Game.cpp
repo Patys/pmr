@@ -1,8 +1,7 @@
 #include "Game.hpp"
+#include "Init.hpp"
 #include "AssetsManager.hpp"
 #include <iostream>
-
-void setupWorld(World* world);
 
 Game::Game()
 {
@@ -16,46 +15,10 @@ Game::~Game()
 
 void Game::init()
 {
-  font.loadFromFile("data/font/Roboto-Regular.ttf");
+  Init::init();
 
   debug_text.setFont(font);
   debug_text.setCharacterSize(10);
-
-  Assets::Manager::loadTexture("player", "data/gfx/alienBeige.png");
-
-  Assets::Manager::loadTexture("bush1", "data/gfx/rpgTile155.png");
-  Assets::Manager::loadTexture("bush2", "data/gfx/rpgTile157.png");
-  Assets::Manager::loadTexture("bush3", "data/gfx/rpgTile159.png");
-  Assets::Manager::loadTexture("tree1", "data/gfx/tree.png");
-
-  Assets::Manager::loadTexture("axe1", "data/gfx/axe.png");
-  Assets::Manager::loadTexture("sword1", "data/gfx/sword.png");
-  Assets::Manager::loadTexture("wood1", "data/gfx/wood.png");
-
-  Assets::Manager::loadTexture("gui_inventory", "data/gfx/basket.png");
-  Assets::Manager::loadTexture("gui_panel", "data/gfx/panel_gui.png");
-  Assets::Manager::loadTexture("gui_cross", "data/gfx/cross.png");
-  Assets::Manager::loadTexture("gui_info", "data/gfx/information.png");
-  Assets::Manager::loadTexture("gui_wrench", "data/gfx/wrench.png");
-  Assets::Manager::loadTexture("gui_pick", "data/gfx/export.png");
-
-  sprites["player"] = sf::Sprite(*Assets::Manager::getTexture("player"));
-
-  sprites["bush1"] = sf::Sprite(*Assets::Manager::getTexture("bush1"));
-  sprites["bush2"] = sf::Sprite(*Assets::Manager::getTexture("bush2"));
-  sprites["bush3"] = sf::Sprite(*Assets::Manager::getTexture("bush3"));
-  sprites["tree1"] = sf::Sprite(*Assets::Manager::getTexture("tree1"));
-  sprites["wood1"] = sf::Sprite(*Assets::Manager::getTexture("wood1"));
-
-  sprites["axe1"] = sf::Sprite(*Assets::Manager::getTexture("axe1"));
-  sprites["sword1"] = sf::Sprite(*Assets::Manager::getTexture("sword1"));
-
-  sprites["gui_inventory"] = sf::Sprite(*Assets::Manager::getTexture("gui_inventory"));
-  sprites["gui_panel"] = sf::Sprite(*Assets::Manager::getTexture("gui_panel"));
-  sprites["gui_cross"] = sf::Sprite(*Assets::Manager::getTexture("gui_cross"));
-  sprites["gui_info"] = sf::Sprite(*Assets::Manager::getTexture("gui_info"));
-  sprites["gui_wrench"] = sf::Sprite(*Assets::Manager::getTexture("gui_wrench"));
-  sprites["gui_pick"] = sf::Sprite(*Assets::Manager::getTexture("gui_pick"));
 
   hand_menu_active = false;
   draw_item_description = false;
@@ -371,24 +334,4 @@ void Game::runServer()
     {
       server.update(&world);
     }
-}
-
-
-void setupWorld(World* world)
-{
-  world->addEnity(Enity(sf::Vector2f(100,150),
-			sf::Vector2f(64,64),
-			100, "bush1", "bush_01"));
-  world->addEnity(Enity(sf::Vector2f(200,200),
-			sf::Vector2f(64,128),
-			100, "tree1", "tree_01"));
-
-  world->addItem(Item(sf::Vector2f(300,200),
-		      sf::Vector2f(64,64),
-		      "item_01", "axe1"));
-
-  world->addItem(Item(sf::Vector2f(350,200),
-		      sf::Vector2f(64,64),
-		      "item_02", "sword1"));
-  
 }

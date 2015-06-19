@@ -13,12 +13,7 @@ class World
 {
 public:
   
-  void changeWorld(World* world) 
-  { 
-    enities.clear(); enities.swap(world->enities);
-    items.clear(); items.swap(world->items);
-    players.clear(); players.swap(world->players);
-  }
+  void changeWorld(World* world);
 
   void addEnity(Enity enity);
   Enity* getEnity(const std::string& id);
@@ -39,3 +34,5 @@ public:
 
 sf::Packet& operator <<(sf::Packet& packet, const World& m);
 sf::Packet& operator >>(sf::Packet& packet, World& m);
+
+void setupWorld(World* world);
