@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "Init.hpp"
 #include "AssetsManager.hpp"
+#include "EventManager.hpp"
 #include <iostream>
 
 Game::Game()
@@ -20,10 +21,6 @@ void Game::init()
   debug_text.setFont(font);
   debug_text.setCharacterSize(10);
 
-  hand_menu_active = false;
-  draw_item_description = false;
-  selected_item_in_inventory = 0;
-  
   game_window.reset(sf::FloatRect(-100, -100, 800, 600));
 }
 
@@ -40,133 +37,19 @@ void Game::run()
       sf::Event event;
       while (window.pollEvent(event))
         {
-	  sf::Vector2f mouse_pos = (sf::Vector2f)sf::Mouse::getPosition(window);
-	  sf::Vector2f world_pos = game_window.getCenter() - sf::Vector2f(400,300);
-
 	  if (event.type == sf::Event::Closed)
 	    window.close();
 	  if (event.type == sf::Event::LostFocus)
 	    focused = false;
 	  if (event.type == sf::Event::GainedFocus)
 	    focused = true;
-	  if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
-	    {
-	      if(!draw_item_description)
-		{
-		  for(auto x : world.enities)
-		    {
-		      if(mouse_pos.x + world_pos.x > x.position.x &&
-			 mouse_pos.x + world_pos.x < x.position.x + x.size.x &&
-			 mouse_pos.y + world_pos.y > x.position.y &&
-			 mouse_pos.y + world_pos.y < x.position.y + x.size.y)
-			{
-			  client.runCommand("attack enity", x.id);
-			}
-		    }
-
-		  hand_menu_active = false;
-		  for(auto x : world.items)
-		    {
-		      if(x.position.x < mouse_pos.x + world_pos.x && 
-			 x.position.x + x.size.x > mouse_pos.x + world_pos.x &&
-			 x.position.y < mouse_pos.y + world_pos.y &&
-			 x.position.y + x.size.y > mouse_pos.y + world_pos.y)
-			{
-			  selected_item_in_world = x.id;
-			  hand_menu_active = true;
-			  position_hand_menu = mouse_pos + world_pos;
-			}
-		    }
-		}
-		
-	    } 
-	  if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
-	    {
-	      if(draw_item_description)
-		{
-		  if(mouse_pos.x > 100 &&
-		     mouse_pos.x < 150 &&
-		     mouse_pos.y > 45 &&
-		     mouse_pos.y < 95)
-		    {
-		      draw_item_description = false;
-		    }
-		}
-	      if(hand_menu_active && !draw_item_description)
-		{
-		  // click on cross
-		  if(mouse_pos.x + world_pos.x > position_hand_menu.x - 25 &&
-		     mouse_pos.x + world_pos.x < position_hand_menu.x + 25 &&
-		     mouse_pos.y + world_pos.y > position_hand_menu.y - 75 &&
-		     mouse_pos.y + world_pos.y < position_hand_menu.y - 25)
-		    {
-		      client.runCommand("destroy item", selected_item_in_world);
-		      hand_menu_active = false;
-		    }
-		  // pick up
-		  if(mouse_pos.x + world_pos.x > position_hand_menu.x - 75 &&
-		     mouse_pos.x + world_pos.x < position_hand_menu.x - 25 &&
-		     mouse_pos.y + world_pos.y > position_hand_menu.y - 25 &&
-		     mouse_pos.y + world_pos.y < position_hand_menu.y + 25)
-		    {
-		      client.runCommand("pick up", selected_item_in_world);
-		      hand_menu_active = false;
-		    }
-		  // info
-		  if(mouse_pos.x + world_pos.x > position_hand_menu.x + 25 &&
-		     mouse_pos.x + world_pos.x < position_hand_menu.x + 75 &&
-		     mouse_pos.y + world_pos.y > position_hand_menu.y - 25 &&
-		     mouse_pos.y + world_pos.y < position_hand_menu.y + 75)
-		    {
-		      draw_item_description = true;
-		      hand_menu_active = false;
-		    }
-		}
-	    }
-	  if (event.type == sf::Event::KeyReleased)
-	    {
-	      if(!draw_item_description)
-		{
-		  if(event.key.code == sf::Keyboard::Q)
-		    {
-		      if(selected_item_in_inventory < world.getPlayer(player_id)->inventory.size())
-			{
-			  Item item = world.getPlayer(player_id)->inventory[selected_item_in_inventory];
-			  client.runCommand("drop item", item.id);
-			}
-		    }
-		}
-	      if(event.key.code == sf::Keyboard::Escape)
-		{
-		  draw_item_description = false;
-		}
-	    }
-	 
+	  
+	  sf::Vector2f world_pos = game_window.getCenter() - sf::Vector2f(400,300);
+	  EventManager::update(&event, &world, world_pos, &client);
         }
       
       if(focused)
 	{
-	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
-	    selected_item_in_inventory = 0;
-	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
-	    selected_item_in_inventory = 1;
-	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
-	    selected_item_in_inventory = 2;
-	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
-	    selected_item_in_inventory = 3;
-	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
-	    selected_item_in_inventory = 4;
-	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num6))
-	    selected_item_in_inventory = 5;
-	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num7))
-	    selected_item_in_inventory = 6;
-	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num8))
-	    selected_item_in_inventory = 7;
-	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num9))
-	    selected_item_in_inventory = 8;
-	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
-	    selected_item_in_inventory = 9;
-
 	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	    client.runCommand("player move", "up");
 	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
@@ -216,15 +99,15 @@ void Game::draw()
       window.draw(debug_text);
     }
 
-  if(hand_menu_active)
+  if(EventManager::active_hand_menu)
     drawHandMenu();
 
   window.setView(window.getDefaultView());
   
   drawInventory();
-  if(draw_item_description)
+  if(EventManager::active_item_description)
     {
-      auto item = world.getItem(selected_item_in_world);
+      auto item = world.getItem(EventManager::selected_world_item);
       if(item)
 	drawItemDescription(getItemDescription(item->type));
     }
@@ -258,11 +141,6 @@ void Game::drawPlayer(const std::string& spriteID, Player& player)
   debug_text.setString(player.id);
 }
 
-void Game::drawGUI()
-{
-
-}
-
 void Game::drawInventory()
 {
   sf::RectangleShape inv_rect(sf::Vector2f(64,64));
@@ -290,7 +168,7 @@ void Game::drawInventory()
       
       pos.x++;
     }
-  select_inv_rect.setPosition(selected_item_in_inventory * 65+80, 534);
+  select_inv_rect.setPosition(EventManager::selected_inventory_item * 65+80, 534);
   window.draw(select_inv_rect);
 }
 
@@ -307,10 +185,14 @@ void Game::drawItemDescription(const std::string& description)
 
 void Game::drawHandMenu()
 {
-  sprites["gui_cross"].setPosition(position_hand_menu.x - 25, position_hand_menu.y - 75);
-  sprites["gui_info"].setPosition(position_hand_menu.x + 25, position_hand_menu.y - 25);
-  sprites["gui_pick"].setPosition(position_hand_menu.x - 75, position_hand_menu.y - 25);
-  sprites["gui_wrench"].setPosition(position_hand_menu.x - 25, position_hand_menu.y + 25);
+  sprites["gui_cross"].setPosition(EventManager::position_hand_menu.x - 25, 
+				   EventManager::position_hand_menu.y - 75);
+  sprites["gui_info"].setPosition(EventManager::position_hand_menu.x + 25, 
+				  EventManager::position_hand_menu.y - 25);
+  sprites["gui_pick"].setPosition(EventManager::position_hand_menu.x - 75, 
+				  EventManager::position_hand_menu.y - 25);
+  sprites["gui_wrench"].setPosition(EventManager::position_hand_menu.x - 25, 
+				    EventManager::position_hand_menu.y + 25);
 
   window.draw(sprites["gui_cross"]);
   window.draw(sprites["gui_info"]);

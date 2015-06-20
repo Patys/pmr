@@ -30,13 +30,6 @@ private:
   void drawHandMenu();
 
   void drawItemDescription(const std::string& description);
-  bool draw_item_description;
-
-  int selected_item_in_inventory;
-
-  bool hand_menu_active;
-  sf::Vector2f position_hand_menu;
-  std::string selected_item_in_world;
 
   World world;
   sf::Text debug_text;

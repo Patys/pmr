@@ -14,6 +14,7 @@ public:
 	
   void update(World* world, std::string& _player_id);
   void runCommand(const std::string& command, const std::string& id);
+  const std::string& getPlayerID() { return player_id; }
 private:
   sf::TcpSocket socket;
   std::string player_id;
