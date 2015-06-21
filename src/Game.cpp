@@ -67,9 +67,9 @@ void Game::run()
 	    game_window.move(0,8);
 	  if(sf::Mouse::getPosition(window).y < 5)
 	    game_window.move(0,-8);
-
-	  client.update(&world, player_id);
 	}
+
+      client.update(&world, player_id);
 
       draw();
     }
@@ -77,7 +77,7 @@ void Game::run()
 
 void Game::draw()
 {
-  window.clear();
+  window.clear(sf::Color(100,150,40));
 
   window.setView(game_window);
 

@@ -106,12 +106,27 @@ sf::Packet& operator >>(sf::Packet& packet, World& m)
 
 void setupWorld(World* world)
 {
-  world->addEnity(Enity(sf::Vector2f(100,150),
+  world->addEnity(Enity(sf::Vector2f(300,300),
 			sf::Vector2f(64,64),
 			100, "bush1", "bush_01"));
   world->addEnity(Enity(sf::Vector2f(200,200),
 			sf::Vector2f(64,128),
 			100, "tree1", "tree_01"));
+  world->addEnity(Enity(sf::Vector2f(250,300),
+			sf::Vector2f(64,128),
+			100, "tree1", "tree_02"));
+  world->addEnity(Enity(sf::Vector2f(300,50),
+			sf::Vector2f(64,128),
+			100, "tree1", "tree_03"));
+  world->addEnity(Enity(sf::Vector2f(400,100),
+			sf::Vector2f(64,128),
+			100, "tree1", "tree_05"));
+  world->addEnity(Enity(sf::Vector2f(450,220),
+			sf::Vector2f(64,128),
+			100, "tree1", "tree_06"));
+  world->addEnity(Enity(sf::Vector2f(500,180),
+			sf::Vector2f(64,128),
+			100, "tree1", "tree_07"));
 
   world->addItem(Item(sf::Vector2f(300,200),
 		      sf::Vector2f(64,64),

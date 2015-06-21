@@ -69,14 +69,35 @@ void Server::update(World* world)
 			      std::string direction;
 			      if(packet >> direction >> player_id)
 				{
+				  sf::Vector2f move;
 				  if(direction == "up")
-				    world->getPlayer(player_id)->position.y -= 5;
+				    move = sf::Vector2f(0,-5);
 				  if(direction == "down")
-				    world->getPlayer(player_id)->position.y += 5;
+				    move = sf::Vector2f(0,5);
 				  if(direction == "left")
-				    world->getPlayer(player_id)->position.x -= 5;
+				    move = sf::Vector2f(-5,0);
 				  if(direction == "right")
-				    world->getPlayer(player_id)->position.x += 5;
+				    move = sf::Vector2f(5,0);
+
+				  sf::Vector2f new_player_position = world->getPlayer(player_id)->position + move;
+				  sf::Vector2f player_size = world->getPlayer(player_id)->size;
+				  bool make_move = true;
+				  for(auto x : world->enities)
+				    {
+				      if(x.type == "tree1")
+					{
+					  if(new_player_position.x + player_size.x >= x.position.x && 
+					     new_player_position.x <= x.position.x + x.size.x &&
+					     new_player_position.y + player_size.y >= x.position.y && 
+					     new_player_position.y <= x.position.y + x.size.y )
+					    {
+					      make_move = false;
+					      break;
+					    }
+					}
+				    }
+				  if(make_move)
+				    world->getPlayer(player_id)->position = new_player_position;
 				}
 			    }
 			  if(event == "update world")
