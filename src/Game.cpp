@@ -45,7 +45,8 @@ void Game::run()
 	    focused = true;
 	  
 	  sf::Vector2f world_pos = game_window.getCenter() - sf::Vector2f(400,300);
-	  EventManager::update(&event, &world, world_pos, &client);
+	  EventManager::update(&event, &world, world_pos, &client, &craft_panel);
+	  craft_panel.update(&event);
         }
       
       if(focused)
@@ -101,9 +102,9 @@ void Game::draw()
 
   if(EventManager::active_hand_menu)
     drawHandMenu();
-
-  window.setView(window.getDefaultView());
   
+  window.setView(window.getDefaultView());
+
   drawInventory();
   if(EventManager::active_item_description)
     {
@@ -111,6 +112,9 @@ void Game::draw()
       if(item)
 	drawItemDescription(getItemDescription(item->type));
     }
+
+  craft_panel.draw(&window);
+
   window.display();
 }
 

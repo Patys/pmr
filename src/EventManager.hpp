@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "World.hpp"
 #include "Client.hpp"
+#include "CraftPanel.hpp"
 
 namespace EventManager
 {
@@ -14,5 +15,6 @@ namespace EventManager
   extern bool active_hand_menu;
   extern bool active_item_description;
 
-  void update(sf::Event* event, World* world, sf::Vector2f view_position, Client* client);
+  void update(sf::Event* event, World* world, sf::Vector2f view_position, Client* client, CraftPanel* craft_panel);
+  
 }

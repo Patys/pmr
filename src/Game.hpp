@@ -6,6 +6,7 @@
 #include "Client.hpp"
 #include "Server.hpp"
 #include "World.hpp"
+#include "CraftPanel.hpp"
 
 class Game
 {
@@ -30,6 +31,8 @@ private:
   void drawHandMenu();
 
   void drawItemDescription(const std::string& description);
+  
+  CraftPanel craft_panel;
 
   World world;
   sf::Text debug_text;

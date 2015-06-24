@@ -8,7 +8,7 @@ sf::Vector2f EventManager::position_hand_menu = sf::Vector2f(0,0);
 bool EventManager::active_hand_menu = false;
 bool EventManager::active_item_description = false;
 
-void EventManager::update(sf::Event* event, World* world, sf::Vector2f view_position, Client* client)
+void EventManager::update(sf::Event* event, World* world, sf::Vector2f view_position, Client* client, CraftPanel* craft_panel)
 {
   if(event->type == sf::Event::MouseButtonReleased && event->mouseButton.button == sf::Mouse::Left)
     {
@@ -86,6 +86,14 @@ void EventManager::update(sf::Event* event, World* world, sf::Vector2f view_posi
 	    {
 	      active_item_description = true;
 	      active_hand_menu = false;
+	    }
+	  // craft
+	  if(mouse_pos.x + view_position.x > position_hand_menu.x - 25 &&
+	     mouse_pos.x + view_position.x < position_hand_menu.x + 25 &&
+	     mouse_pos.y + view_position.y > position_hand_menu.y + 25 &&
+	     mouse_pos.y + view_position.y < position_hand_menu.y + 75)
+	    {
+	      craft_panel->setActive(true);
 	    }
 	}
     }
