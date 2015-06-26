@@ -6,15 +6,15 @@ int EventManager::selected_inventory_item = 0;
 sf::Vector2f EventManager::position_hand_menu = sf::Vector2f(0,0);
 
 bool EventManager::active_hand_menu = false;
-bool EventManager::active_item_description = false;
 
-void EventManager::update(sf::Event* event, World* world, sf::Vector2f view_position, Client* client, CraftPanel* craft_panel)
+void EventManager::update(sf::Event* event, World* world, sf::Vector2f view_position, Client* client, 
+			  CraftPanel* craft_panel, DescriptionPanel* description_panel)
 {
   if(event->type == sf::Event::MouseButtonReleased && event->mouseButton.button == sf::Mouse::Left)
     {
       sf::Vector2f mouse_pos = sf::Vector2f(event->mouseButton.x, event->mouseButton.y);
 
-      if(!active_item_description)
+      if(description_panel->getActive() == false)
 	{
 	  for(auto x : world->enities)
 	    {
@@ -48,17 +48,7 @@ void EventManager::update(sf::Event* event, World* world, sf::Vector2f view_posi
     {
       sf::Vector2f mouse_pos = sf::Vector2f(event->mouseButton.x, event->mouseButton.y);
 
-      if(active_item_description)
-	{
-	  if(mouse_pos.x > 100 &&
-	     mouse_pos.x < 150 &&
-	     mouse_pos.y > 45 &&
-	     mouse_pos.y < 95)
-	    {
-	      active_item_description = false;
-	    }
-	}
-      if(active_hand_menu && !active_item_description)
+      if(active_hand_menu)
 	{
 	  // click on cross
 	  if(mouse_pos.x + view_position.x > position_hand_menu.x - 25 &&
@@ -84,7 +74,7 @@ void EventManager::update(sf::Event* event, World* world, sf::Vector2f view_posi
 	     mouse_pos.y + view_position.y > position_hand_menu.y - 25 &&
 	     mouse_pos.y + view_position.y < position_hand_menu.y + 75)
 	    {
-	      active_item_description = true;
+	      description_panel->setActive(true);
 	      active_hand_menu = false;
 	    }
 	  // craft
@@ -94,26 +84,20 @@ void EventManager::update(sf::Event* event, World* world, sf::Vector2f view_posi
 	     mouse_pos.y + view_position.y < position_hand_menu.y + 75)
 	    {
 	      craft_panel->setActive(true);
+	      active_hand_menu = false;
 	    }
 	}
     }
 
   if(event->type == sf::Event::KeyReleased)
     {
-      if(!active_item_description)
+      if(event->key.code == sf::Keyboard::Q)
 	{
-	  if(event->key.code == sf::Keyboard::Q)
+	  if(selected_inventory_item < world->getPlayer(client->getPlayerID())->inventory.size())
 	    {
-	      if(selected_inventory_item < world->getPlayer(client->getPlayerID())->inventory.size())
-		{
-		  Item item = world->getPlayer(client->getPlayerID())->inventory[selected_inventory_item];
-		  client->runCommand("drop item", item.id);
-		}
+	      Item item = world->getPlayer(client->getPlayerID())->inventory[selected_inventory_item];
+	      client->runCommand("drop item", item.id);
 	    }
-	}
-      if(event->key.code == sf::Keyboard::Escape)
-	{
-	  active_item_description = false;
 	}
 
       if(event->key.code == sf::Keyboard::Num1)

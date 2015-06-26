@@ -45,7 +45,8 @@ void Game::run()
 	    focused = true;
 	  
 	  sf::Vector2f world_pos = game_window.getCenter() - sf::Vector2f(400,300);
-	  EventManager::update(&event, &world, world_pos, &client, &craft_panel);
+	  EventManager::update(&event, &world, world_pos, &client, &craft_panel, &description_panel);
+	  description_panel.update(&event);
 	  craft_panel.update(&event);
         }
       
@@ -68,6 +69,13 @@ void Game::run()
 	    game_window.move(0,8);
 	  if(sf::Mouse::getPosition(window).y < 5)
 	    game_window.move(0,-8);
+	}
+
+      if(description_panel.getActive() == true)
+	{
+	  auto item = world.getItem(EventManager::selected_world_item);
+	  if(item)
+	    description_panel.setDescription(getItemDescription(item->type));
 	}
 
       client.update(&world, player_id);
@@ -106,13 +114,8 @@ void Game::draw()
   window.setView(window.getDefaultView());
 
   drawInventory();
-  if(EventManager::active_item_description)
-    {
-      auto item = world.getItem(EventManager::selected_world_item);
-      if(item)
-	drawItemDescription(getItemDescription(item->type));
-    }
 
+  description_panel.draw(&window);
   craft_panel.draw(&window);
 
   window.display();
@@ -174,17 +177,6 @@ void Game::drawInventory()
     }
   select_inv_rect.setPosition(EventManager::selected_inventory_item * 65+80, 534);
   window.draw(select_inv_rect);
-}
-
-void Game::drawItemDescription(const std::string& description)
-{
-  sprites["gui_cross"].setPosition(100,45);
-  sprites["gui_panel"].setPosition(75,20);
-  window.draw(sprites["gui_panel"]);
-  window.draw(sprites["gui_cross"]);
-  sf::Text des_text(description.c_str(), font, 18);
-  des_text.setPosition(100,100);
-  window.draw(des_text);
 }
 
 void Game::drawHandMenu()

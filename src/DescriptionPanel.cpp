@@ -1,23 +1,7 @@
-#include "CraftPanel.hpp"
+#include "DescriptionPanel.hpp"
+#include "Init.hpp"
 
-CraftPanel::CraftPanel() : 
-  is_active(false)
-{
-
-}
-
-void CraftPanel::draw(sf::RenderWindow* window)
-{
-  if(is_active)
-    {
-      sprites["gui_cross"].setPosition(100,45);
-      sprites["gui_panel"].setPosition(75,20);
-      window->draw(sprites["gui_panel"]);
-      window->draw(sprites["gui_cross"]);
-    }
-}
-
-void CraftPanel::update(sf::Event* event)
+void DescriptionPanel::update(sf::Event* event)
 {
   if(is_active)
     {
@@ -33,6 +17,7 @@ void CraftPanel::update(sf::Event* event)
 	      is_active = false;
 	    }
 	}
+
       if(event->type == sf::Event::KeyReleased)
 	{
 	  if(event->key.code == sf::Keyboard::Escape)
@@ -40,5 +25,19 @@ void CraftPanel::update(sf::Event* event)
 	      is_active = false;
 	    }
 	}
+    }
+}
+
+void DescriptionPanel::draw(sf::RenderWindow* window)
+{
+  if(is_active)
+    {
+      sprites["gui_cross"].setPosition(100,45);
+      sprites["gui_panel"].setPosition(75,20);
+      window->draw(sprites["gui_panel"]);
+      window->draw(sprites["gui_cross"]);
+      sf::Text des_text(description.c_str(), font, 18);
+      des_text.setPosition(100,100);
+      window->draw(des_text);
     }
 }
