@@ -47,7 +47,7 @@ void Game::run()
 	  sf::Vector2f world_pos = game_window.getCenter() - sf::Vector2f(400,300);
 	  EventManager::update(&event, &world, world_pos, &client, &craft_panel, &description_panel);
 	  description_panel.update(&event);
-	  craft_panel.update(&event);
+	  craft_panel.update(&event, &client);
         }
       
       if(focused)
@@ -118,6 +118,9 @@ void Game::draw()
   description_panel.draw(&window);
   craft_panel.draw(&window);
 
+  sprites["gui_wrench"].setPosition(5, 5);
+  window.draw(sprites["gui_wrench"]);
+
   window.display();
 }
 
@@ -187,13 +190,10 @@ void Game::drawHandMenu()
 				  EventManager::position_hand_menu.y - 25);
   sprites["gui_pick"].setPosition(EventManager::position_hand_menu.x - 75, 
 				  EventManager::position_hand_menu.y - 25);
-  sprites["gui_wrench"].setPosition(EventManager::position_hand_menu.x - 25, 
-				    EventManager::position_hand_menu.y + 25);
 
   window.draw(sprites["gui_cross"]);
   window.draw(sprites["gui_info"]);
   window.draw(sprites["gui_pick"]);
-  window.draw(sprites["gui_wrench"]);
 }
 
 void Game::runClient(const std::string& ip)

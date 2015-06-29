@@ -92,4 +92,10 @@ void Client::runCommand(const std::string& command, const std::string& id)
       packet << "attack enity" << id;
       socket.send(packet);
     }
+  if(command == "craft item")
+    {
+      sf::Packet packet;
+      packet << "craft item" << id << player_id;
+      socket.send(packet);
+    }
 }

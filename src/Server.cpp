@@ -187,6 +187,27 @@ void Server::update(World* world)
 				    }
 				}
 			    }
+			  if(event == "craft item")
+			    {
+			      std::string item_pos;
+			      std::string player_id;
+			      if(packet >> item_pos >> player_id)
+				{
+				  int item_pos_inv = std::stoi(item_pos);
+				  auto player = world->getPlayer(player_id);
+				  if(player->inventory.size() >= item_pos_inv)
+				    {
+				      if(player->inventory[item_pos_inv].type == "wood1")
+					{
+					  std::string new_item_id = "item_" + std::to_string(reinterpret_cast<uint32_t>(&player->inventory[item_pos_inv]));
+					  player->inventory.push_back(Item(sf::Vector2f(0,0),
+									   sf::Vector2f(64,64),
+									   new_item_id, "axe1"));
+					  player->inventory.erase(item_pos_inv + player->inventory.begin());
+					}
+				    }
+				}
+			    }
 			}
                     }
 		  else if(client.receive(packet) == sf::Socket::Disconnected)

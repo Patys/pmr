@@ -1,4 +1,5 @@
 #include "EventManager.hpp"
+#include <iostream>
 
 std::string EventManager::selected_world_item = "";
 int EventManager::selected_inventory_item = 0;
@@ -40,6 +41,14 @@ void EventManager::update(sf::Event* event, World* world, sf::Vector2f view_posi
 		  position_hand_menu = mouse_pos + view_position;
 		}
 	    }
+	  // craft
+	  if(mouse_pos.x > 5 &&
+	     mouse_pos.x < 55 &&
+	     mouse_pos.y > 5 &&
+	     mouse_pos.y < 55)
+	    {
+	      craft_panel->setActive(true);
+	    }
 	}
     }
 
@@ -75,15 +84,6 @@ void EventManager::update(sf::Event* event, World* world, sf::Vector2f view_posi
 	     mouse_pos.y + view_position.y < position_hand_menu.y + 75)
 	    {
 	      description_panel->setActive(true);
-	      active_hand_menu = false;
-	    }
-	  // craft
-	  if(mouse_pos.x + view_position.x > position_hand_menu.x - 25 &&
-	     mouse_pos.x + view_position.x < position_hand_menu.x + 25 &&
-	     mouse_pos.y + view_position.y > position_hand_menu.y + 25 &&
-	     mouse_pos.y + view_position.y < position_hand_menu.y + 75)
-	    {
-	      craft_panel->setActive(true);
 	      active_hand_menu = false;
 	    }
 	}

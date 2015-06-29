@@ -1,4 +1,5 @@
 #include "CraftPanel.hpp"
+#include "EventManager.hpp"
 
 CraftPanel::CraftPanel() : 
   is_active(false)
@@ -14,10 +15,13 @@ void CraftPanel::draw(sf::RenderWindow* window)
       sprites["gui_panel"].setPosition(75,20);
       window->draw(sprites["gui_panel"]);
       window->draw(sprites["gui_cross"]);
+      sf::Text des_text("Select item in inventory: 0-9\nIf you want to craft, press E\nPossible crafts:\nwood->axe", font, 14);
+      des_text.setPosition(100,100);
+      window->draw(des_text);
     }
 }
 
-void CraftPanel::update(sf::Event* event)
+void CraftPanel::update(sf::Event* event, Client* client)
 {
   if(is_active)
     {
@@ -39,6 +43,11 @@ void CraftPanel::update(sf::Event* event)
 	    {
 	      is_active = false;
 	    }
+	  if(event->key.code == sf::Keyboard::E)
+	    {
+	      client->runCommand("craft item", std::to_string(EventManager::selected_inventory_item));
+	    }
 	}
+      
     }
 }
