@@ -43,7 +43,6 @@ private:
   Server server;
 
   std::string server_ip;
-  std::string player_id;
 	
   sf::RenderWindow window;
   sf::View game_window;

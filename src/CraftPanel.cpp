@@ -45,7 +45,7 @@ void CraftPanel::update(sf::Event* event, Client* client)
 	    }
 	  if(event->key.code == sf::Keyboard::E)
 	    {
-	      client->runCommand("craft item", std::to_string(EventManager::selected_inventory_item));
+	      client->sendCommand("craft item", {std::to_string(EventManager::selected_inventory_item), client->getPlayerID()});
 	    }
 	}
       

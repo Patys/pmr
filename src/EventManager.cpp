@@ -24,7 +24,7 @@ void EventManager::update(sf::Event* event, World* world, sf::Vector2f view_posi
 		 mouse_pos.y + view_position.y > x.position.y &&
 		 mouse_pos.y + view_position.y < x.position.y + x.size.y)
 		{
-		  client->runCommand("attack enity", x.id);
+		  client->sendCommand("attack enity", {x.id});
 		}
 	    }
 
@@ -65,7 +65,7 @@ void EventManager::update(sf::Event* event, World* world, sf::Vector2f view_posi
 	     mouse_pos.y + view_position.y > position_hand_menu.y - 75 &&
 	     mouse_pos.y + view_position.y < position_hand_menu.y - 25)
 	    {
-	      client->runCommand("destroy item", selected_world_item);
+	      client->sendCommand("destroy item", {selected_world_item});
 	      active_hand_menu = false;
 	    }
 	  // pick up
@@ -74,7 +74,7 @@ void EventManager::update(sf::Event* event, World* world, sf::Vector2f view_posi
 	     mouse_pos.y + view_position.y > position_hand_menu.y - 25 &&
 	     mouse_pos.y + view_position.y < position_hand_menu.y + 25)
 	    {
-	      client->runCommand("pick up", selected_world_item);
+	      client->sendCommand("pick up", {selected_world_item, client->getPlayerID()});
 	      active_hand_menu = false;
 	    }
 	  // info
@@ -96,7 +96,7 @@ void EventManager::update(sf::Event* event, World* world, sf::Vector2f view_posi
 	  if(selected_inventory_item < world->getPlayer(client->getPlayerID())->inventory.size())
 	    {
 	      Item item = world->getPlayer(client->getPlayerID())->inventory[selected_inventory_item];
-	      client->runCommand("drop item", item.id);
+	      client->sendCommand("drop item", {item.id, client->getPlayerID()});
 	    }
 	}
 

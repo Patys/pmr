@@ -53,13 +53,13 @@ void Game::run()
       if(focused)
 	{
 	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-	    client.runCommand("player move", "up");
+	    client.sendCommand("player move", {"up", client.getPlayerID()});
 	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-	    client.runCommand("player move", "down");
+	    client.sendCommand("player move", {"down", client.getPlayerID()});
 	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-	    client.runCommand("player move", "left");
+	    client.sendCommand("player move", {"left", client.getPlayerID()});
 	  if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-	    client.runCommand("player move", "right");
+	    client.sendCommand("player move", {"right", client.getPlayerID()});
 
 	  if(sf::Mouse::getPosition(window).x > 795)
 	    game_window.move(8,0);
@@ -78,7 +78,7 @@ void Game::run()
 	    description_panel.setDescription(getItemDescription(item->type));
 	}
 
-      client.update(&world, player_id);
+      client.update(&world);
 
       draw();
     }
@@ -171,13 +171,14 @@ void Game::drawInventory()
       pos.x++;
     }
   pos.x = 0;
-  for(auto x : world.getPlayer(player_id)->inventory)
-    {
-      sprites[x.type].setPosition(pos.x * 65+80, 534);
-      window.draw(sprites[x.type]);
+  if(world.getPlayer(client.getPlayerID()))
+    for(auto x : world.getPlayer(client.getPlayerID())->inventory)
+      {
+	sprites[x.type].setPosition(pos.x * 65+80, 534);
+	window.draw(sprites[x.type]);
       
-      pos.x++;
-    }
+	pos.x++;
+      }
   select_inv_rect.setPosition(EventManager::selected_inventory_item * 65+80, 534);
   window.draw(select_inv_rect);
 }
@@ -199,17 +200,15 @@ void Game::drawHandMenu()
 void Game::runClient(const std::string& ip)
 {
   server_ip = ip;
-  client.init(server_ip);
+  client.connect(server_ip);
   run();
 }
 
 void Game::runServer()
 {
-  setupWorld(&world);
-
-  server.init();
+  server.setup();
   while(1)
     {
-      server.update(&world);
+      server.update();
     }
 }
