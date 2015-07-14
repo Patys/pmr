@@ -22,6 +22,8 @@ private:
 
   void run();
 
+  void handleInput(sf::Event* event);
+
   void draw();
   void drawEnity(const std::string& spriteID, Enity& enity);
   void drawItem(const std::string& spriteID, Item& item);
@@ -38,7 +40,15 @@ private:
 
   World world;
   sf::Text debug_text;
-	
+
+  // gui events 
+  std::string selected_world_item;
+  int selected_inventory_item;
+  
+  sf::Vector2f position_hand_menu;
+  bool active_hand_menu;
+  //
+
   Client client;
   Server server;
 
