@@ -26,7 +26,6 @@ private:
 
   void draw();
   void drawEnity(const std::string& spriteID, Enity& enity);
-  void drawItem(const std::string& spriteID, Item& item);
   void drawPlayer(const std::string& spriteID, Player& player);
 
   void drawGUI();

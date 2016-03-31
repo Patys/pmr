@@ -4,7 +4,7 @@
 #include <SFML/Network.hpp>
 #include <string>
 #include <vector>
-#include "Item.hpp"
+#include "Enity.hpp"
 
 class Player
 {
@@ -21,7 +21,7 @@ public:
   int life;
   
   std::string current_item; // type of item
-  std::vector<Item> inventory;
+  std::vector<Enity> inventory;
 };
 
 

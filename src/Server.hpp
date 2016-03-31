@@ -5,19 +5,19 @@
 class Server
 {
 public:
-  Server();
+	Server();
 
-  void setup();
+	void setup();
 
-  void update();
+	void update();
 
 private:
-  
-  void excuteCommand(const std::string& command, std::vector<std::string> data, sf::TcpSocket* client);
 
-  sf::TcpListener listener;
-  std::vector < sf::TcpSocket *> clients;
-  sf::SocketSelector selector;
+	void excuteCommand(const std::string& command, std::vector<std::string> data, sf::TcpSocket* client);
 
-  World world;
+	sf::TcpListener listener;
+	std::vector < sf::TcpSocket *> clients;
+	sf::SocketSelector selector;
+
+	World world;
 };

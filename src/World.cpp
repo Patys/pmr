@@ -2,9 +2,11 @@
 
 void World::changeWorld(World* world)
 {
-  enities.clear(); enities.swap(world->enities);
-  items.clear(); items.swap(world->items);
-  players.clear(); players.swap(world->players);
+	enities.clear(); 
+	enities.swap(world->enities);
+	
+	players.clear(); 
+	players.swap(world->players);
 }
 
 void World::addEnity(Enity enity)
@@ -14,126 +16,63 @@ void World::addEnity(Enity enity)
 
 Enity* World::getEnity(const std::string& id)
 {
-  for(std::size_t i = 0; i < enities.size(); i++)
-    {
-      if(enities[i].id == id)
-  	{
-  	  return &enities[i];
-  	}
-    }
-  return nullptr;
+	for(std::size_t i = 0; i < enities.size(); i++)
+	{
+		if(enities[i].id == id)
+		{
+			return &enities[i];
+		}
+	}
+	return nullptr;
 }
 
 void World::removeEnity(const std::string& id)
 {
-  for(std::size_t i = 0; i < enities.size(); i++)
-    {
-      if(enities[i].id == id)
+	for(std::size_t i = 0; i < enities.size(); i++)
 	{
-	  enities.erase(enities.begin() + i);
-	  return;
+		if(enities[i].id == id)
+		{
+			enities.erase(enities.begin() + i);
+			return;
+		}
 	}
-    }
-}
-
-void World::addItem(Item item)
-{
-  items.push_back(item);
-}
-
-Item* World::getItem(const std::string& id)
-{
-  for(std::size_t i = 0; i < items.size(); i++)
-    {
-      if(items[i].id == id)
-  	{
-  	  return &items[i];
-  	}
-    }
-  return nullptr;
-}
-
-void World::removeItem(const std::string& id)
-{
-  for(std::size_t i = 0; i < items.size(); i++)
-    {
-      if(items[i].id == id)
-	{
-	  items.erase(items.begin() + i);
-	  return;
-	}
-    }
 }
 
 void World::addPlayer(Player player)
 {
-  players.push_back(player);
+	players.push_back(player);
 }
 
 Player* World::getPlayer(const std::string& id)
 {
-  for(std::size_t i = 0; i < players.size(); i++)
-    {
-      if(players[i].id == id)
-  	{
-  	  return &players[i];
-  	}
-    }
-  return nullptr;
+	for(std::size_t i = 0; i < players.size(); i++)
+	{
+		if(players[i].id == id)
+		{
+			return &players[i];
+		}
+	}
+	return nullptr;
 }
 
 void World::removePlayer(const std::string& id)
 {
-  for(std::size_t i = 0; i < players.size(); i++)
-    {
-      if(players[i].id == id)
+	for(std::size_t i = 0; i < players.size(); i++)
 	{
-	  players.erase(players.begin() + i);
-	  return;
+		if(players[i].id == id)
+		{
+			players.erase(players.begin() + i);
+			return;
+		}
 	}
-    }
 }
 
 sf::Packet& operator <<(sf::Packet& packet, const World& m)
 {
-  return packet << m.enities << m.items << m.players;
+	return packet << m.enities << m.players;
 }
 
 sf::Packet& operator >>(sf::Packet& packet, World& m)
 {
-  return packet >> m.enities >> m.items >> m.players;
-}
-
-void setupWorld(World* world)
-{
-  world->addEnity(Enity(sf::Vector2f(300,300),
-			sf::Vector2f(64,64),
-			100, "bush1", "bush_01"));
-  world->addEnity(Enity(sf::Vector2f(200,200),
-			sf::Vector2f(64,128),
-			100, "tree1", "tree_01"));
-  world->addEnity(Enity(sf::Vector2f(250,300),
-			sf::Vector2f(64,128),
-			100, "tree1", "tree_02"));
-  world->addEnity(Enity(sf::Vector2f(300,50),
-			sf::Vector2f(64,128),
-			100, "tree1", "tree_03"));
-  world->addEnity(Enity(sf::Vector2f(400,100),
-			sf::Vector2f(64,128),
-			100, "tree1", "tree_05"));
-  world->addEnity(Enity(sf::Vector2f(450,220),
-			sf::Vector2f(64,128),
-			100, "tree1", "tree_06"));
-  world->addEnity(Enity(sf::Vector2f(500,180),
-			sf::Vector2f(64,128),
-			100, "tree1", "tree_07"));
-
-  world->addItem(Item(sf::Vector2f(300,200),
-		      sf::Vector2f(64,64),
-		      "item_01", "axe1"));
-
-  world->addItem(Item(sf::Vector2f(350,200),
-		      sf::Vector2f(64,64),
-		      "item_02", "sword1"));
-  
+	return packet >> m.enities >> m.players;
 }

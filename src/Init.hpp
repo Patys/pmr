@@ -11,5 +11,5 @@ extern sf::Font font;
 
 namespace Init
 {
-  void init();
+	void init();
 }
