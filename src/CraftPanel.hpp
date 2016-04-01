@@ -7,15 +7,15 @@
 class CraftPanel
 {
 public:
-  CraftPanel();
-  
-  void draw(sf::RenderWindow* window);
-  void update(sf::Event* event, Client* client, int selected_inventory_item);
+	CraftPanel();
 
-  bool getActive() { return is_active; }
-  void setActive(bool active) { is_active = active; }
+	void draw(sf::RenderWindow* window);
+	void update(sf::Event* event, Client* client, int selected_inventory_item);
+
+	bool getActive() { return is_active; }
+	void setActive(bool active) { is_active = active; }
 
 private:
-  bool is_active;
+	bool is_active;
   
 };

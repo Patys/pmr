@@ -7,19 +7,19 @@ class DescriptionPanel
 {
 public:
 
-  DescriptionPanel() : is_active(false), description("") {}
-  
-  void update(sf::Event* event);
+	DescriptionPanel() : is_active(false), description("") {}
 
-  void draw(sf::RenderWindow* window);
+	void update(sf::Event* event);
 
-  bool getActive() { return is_active; }
-  void setActive(bool active) { is_active = active; }
+	void draw(sf::RenderWindow* window);
 
-  const std::string& getDescription() { return description; }
-  void setDescription(const std::string& new_description) { description = new_description.c_str(); }
+	bool getActive() { return is_active; }
+	void setActive(bool active) { is_active = active; }
+
+	const std::string& getDescription() { return description; }
+	void setDescription(const std::string& new_description) { description = new_description.c_str(); }
 
 private:
-  bool is_active;
-  std::string description;
+	bool is_active;
+	std::string description;
 };
