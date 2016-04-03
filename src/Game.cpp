@@ -9,6 +9,7 @@ Game::Game()
 	selected_inventory_item = 0;
 	position_hand_menu = sf::Vector2f(0, 0);
 	active_hand_menu = false;
+	active_console = true;
 }
 
 Game::~Game()
@@ -45,7 +46,16 @@ void Game::run()
 				focused = false;
 			if (event.type == sf::Event::GainedFocus)
 				focused = true;
-
+			if(event.type == sf::Event::KeyPressed)
+			{
+				if(event.key.code == sf::Keyboard::Tab)
+				{
+					active_console = !active_console;
+				}
+			}
+			if(active_console)
+				console.handleInput(&event);
+			
 			handleInput(&event);
 			description_panel.update(&event);
 			craft_panel.update(&event, &client, selected_inventory_item);
@@ -97,7 +107,6 @@ void Game::handleInput(sf::Event* event)
 		{
 			for(auto x : world.enities)
 			{
-				std::cout << x.attackable << std::endl;
 				if(mouse_pos.x + view_position.x > x.position.x &&
 					mouse_pos.x + view_position.x < x.position.x + x.size.x &&
 					mouse_pos.y + view_position.y > x.position.y &&
@@ -237,6 +246,8 @@ void Game::draw()
 	sprites["gui_wrench"].setPosition(5, 5);
 	window.draw(sprites["gui_wrench"]);
 
+	if(active_console)
+		console.draw(&window);
 	window.display();
 }
 

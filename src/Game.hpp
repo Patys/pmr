@@ -8,51 +8,56 @@
 #include "World.hpp"
 #include "CraftPanel.hpp"
 #include "DescriptionPanel.hpp"
+#include "Console.hpp"
 
 class Game
 {
 public:
-  Game();
-  ~Game();
+	Game();
+	~Game();
 
-  void runClient(const std::string& ip);
-  void runServer();
+	void runClient(const std::string& ip);
+	void runServer();
 private:
-  void init();
+	void init();
 
-  void run();
+	void run();
 
-  void handleInput(sf::Event* event);
+	void handleInput(sf::Event* event);
 
-  void draw();
-  void drawEnity(const std::string& spriteID, Enity& enity);
-  void drawPlayer(const std::string& spriteID, Player& player);
+	void draw();
+	void drawEnity(const std::string& spriteID, Enity& enity);
+	void drawPlayer(const std::string& spriteID, Player& player);
 
-  void drawGUI();
-  void drawInventory();
-  void drawHandMenu();
+	void drawGUI();
+	void drawInventory();
+	void drawHandMenu();
 
-  void drawItemDescription(const std::string& description);
-  
-  CraftPanel craft_panel;
-  DescriptionPanel description_panel;
+	void drawItemDescription(const std::string& description);
 
-  World world;
-  sf::Text debug_text;
+	CraftPanel craft_panel;
+	DescriptionPanel description_panel;
 
-  // gui events 
-  std::string selected_world_item;
-  int selected_inventory_item;
-  
-  sf::Vector2f position_hand_menu;
-  bool active_hand_menu;
-  //
+	World world;
+	sf::Text debug_text;
 
-  Client client;
-  Server server;
+	Console console;
 
-  std::string server_ip;
+	// gui events 
+	std::string selected_world_item;
+	int selected_inventory_item;
+
+	sf::Vector2f position_hand_menu;
+	bool active_hand_menu;
 	
-  sf::RenderWindow window;
-  sf::View game_window;
+	bool active_console;
+	//
+
+	Client client;
+	Server server;
+
+	std::string server_ip;
+
+	sf::RenderWindow window;
+	sf::View game_window;
 };
