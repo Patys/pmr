@@ -1,11 +1,9 @@
 #include "Client.hpp"
 #include <iostream>
 
-Client::Client() :
-	player_id("null")
-{
+sf::TcpSocket Client::socket;
+std::string Client::player_id;
 
-}
 
 void Client::connect(const std::string& ip)
 {
@@ -18,7 +16,7 @@ void Client::update(World* world)
 	// get data from server
 	sf::Packet packet;
 
-	if(this->socket.receive(packet) == sf::Socket::Status::Done)
+	if(Client::socket.receive(packet) == sf::Socket::Status::Done)
 	{
 		std::string event;
 
@@ -29,7 +27,7 @@ void Client::update(World* world)
 				std::string new_player_id;
 				if(packet >> new_player_id)
 				{
-					player_id = new_player_id;
+					Client::player_id = new_player_id;
 					std::cout << "Player ID: " << player_id << "\n";
 				}
 			}

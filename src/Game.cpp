@@ -58,19 +58,19 @@ void Game::run()
 			
 			handleInput(&event);
 			description_panel.update(&event);
-			craft_panel.update(&event, &client, selected_inventory_item);
+			craft_panel.update(&event, selected_inventory_item);
 		}
       
 		if(focused)
 		{
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-				client.sendCommand("player move", {"up", client.getPlayerID()});
+				Client::sendCommand("player move", {"up", Client::getPlayerID()});
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-				client.sendCommand("player move", {"down", client.getPlayerID()});
+				Client::sendCommand("player move", {"down", Client::getPlayerID()});
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-				client.sendCommand("player move", {"left", client.getPlayerID()});
+				Client::sendCommand("player move", {"left", Client::getPlayerID()});
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-				client.sendCommand("player move", {"right", client.getPlayerID()});
+				Client::sendCommand("player move", {"right", Client::getPlayerID()});
 
 			if(sf::Mouse::getPosition(window).x > 795)
 				game_window.move(8,0);
@@ -89,7 +89,7 @@ void Game::run()
 				description_panel.setDescription(getItemDescription(item->type));
 		}
 
-		client.update(&world);
+		Client::update(&world);
 
 		draw();
 	}
@@ -113,7 +113,7 @@ void Game::handleInput(sf::Event* event)
 					mouse_pos.y + view_position.y < x.position.y + x.size.y)
 				{
 					if(x.attackable)
-						client.sendCommand("attack enity", {x.id});
+						Client::sendCommand("attack enity", {x.id});
 				}
 			}
 
@@ -157,7 +157,7 @@ void Game::handleInput(sf::Event* event)
 				mouse_pos.y + view_position.y > position_hand_menu.y - 75 &&
 				mouse_pos.y + view_position.y < position_hand_menu.y - 25)
 			{
-				client.sendCommand("destroy item", {selected_world_item});
+				Client::sendCommand("destroy item", {selected_world_item});
 				active_hand_menu = false;
 			}
 			// pick up
@@ -166,7 +166,7 @@ void Game::handleInput(sf::Event* event)
 				mouse_pos.y + view_position.y > position_hand_menu.y - 25 &&
 				mouse_pos.y + view_position.y < position_hand_menu.y + 25)
 			{
-				client.sendCommand("pick up", {selected_world_item, client.getPlayerID()});
+				Client::sendCommand("pick up", {selected_world_item, Client::getPlayerID()});
 				active_hand_menu = false;
 			}
 			// info
@@ -185,10 +185,10 @@ void Game::handleInput(sf::Event* event)
 	{
 		if(event->key.code == sf::Keyboard::Q)
 		{
-			if(selected_inventory_item < world.getPlayer(client.getPlayerID())->inventory.size())
+			if(selected_inventory_item < world.getPlayer(Client::getPlayerID())->inventory.size())
 			{
-				Enity item = world.getPlayer(client.getPlayerID())->inventory[selected_inventory_item];
-				client.sendCommand("drop item", {item.id, client.getPlayerID()});
+				Enity item = world.getPlayer(Client::getPlayerID())->inventory[selected_inventory_item];
+				Client::sendCommand("drop item", {item.id, Client::getPlayerID()});
 			}
 		}
 
@@ -289,8 +289,8 @@ void Game::drawInventory()
 		pos.x++;
 	}
 	pos.x = 0;
-	if(world.getPlayer(client.getPlayerID()))
-	for(auto x : world.getPlayer(client.getPlayerID())->inventory)
+	if(world.getPlayer(Client::getPlayerID()))
+	for(auto x : world.getPlayer(Client::getPlayerID())->inventory)
 	{
 		sprites[x.type].setPosition(pos.x * 65+80, 534);
 		window.draw(sprites[x.type]);
@@ -318,7 +318,7 @@ void Game::drawHandMenu()
 void Game::runClient(const std::string& ip)
 {
 	server_ip = ip;
-	client.connect(server_ip);
+	Client::connect(server_ip);
 	run();
 }
 

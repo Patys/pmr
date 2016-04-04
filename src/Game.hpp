@@ -53,7 +53,6 @@ private:
 	bool active_console;
 	//
 
-	Client client;
 	Server server;
 
 	std::string server_ip;

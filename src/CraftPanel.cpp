@@ -1,5 +1,6 @@
 #include "CraftPanel.hpp"
 #include "Util.hpp"
+#include "Client.hpp"
 
 CraftPanel::CraftPanel() : 
 	is_active(false)
@@ -21,7 +22,7 @@ void CraftPanel::draw(sf::RenderWindow* window)
 	}
 }
 
-void CraftPanel::update(sf::Event* event, Client* client, int selected_inventory_item)
+void CraftPanel::update(sf::Event* event, int selected_inventory_item)
 {
 	if(is_active)
 	{
@@ -46,7 +47,7 @@ void CraftPanel::update(sf::Event* event, Client* client, int selected_inventory
 			}
 			if(event->key.code == sf::Keyboard::E)
 			{
-				client->sendCommand("craft item", {std::to_string(selected_inventory_item), client->getPlayerID()});
+				Client::sendCommand("craft item", {std::to_string(selected_inventory_item), Client::getPlayerID()});
 			}
 		}
 

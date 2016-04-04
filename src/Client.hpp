@@ -5,19 +5,17 @@
 class Client
 {
 public:
-	Client();
+	static void connect(const std::string& ip);
 
-	void connect(const std::string& ip);
-
-	inline const std::string& getPlayerID() { return player_id; }
+	static inline const std::string& getPlayerID() { return player_id; }
 
 	// process server's data
-	void update(World* world);
+	static void update(World* world);
 
 	// send command to server
-	void sendCommand(const std::string& command, std::vector<std::string> additional_data);
+	static void sendCommand(const std::string& command, std::vector<std::string> additional_data);
 private:
-	sf::TcpSocket socket;
+	static sf::TcpSocket socket;
 
-	std::string player_id;
+	static std::string player_id;
 };
