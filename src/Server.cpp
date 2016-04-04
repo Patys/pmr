@@ -250,7 +250,7 @@ void Server::excuteCommand(const std::string& command, std::vector<std::string> 
 				std::string new_item_id = "item_" + std::to_string(reinterpret_cast<uint32_t>(&player->inventory[item_pos_inv]));
 				player->inventory.push_back(Enity(sf::Vector2f(0,0),
 												sf::Vector2f(64,64),
-												100, false, new_item_id, "axe1"));
+												100, false, "axe1", new_item_id));
 				player->inventory.erase(item_pos_inv + player->inventory.begin());
 			}
 		}
