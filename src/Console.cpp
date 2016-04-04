@@ -21,6 +21,8 @@ void Console::handleInput(sf::Event* event)
 	{
 		if(event->key.code == sf::Keyboard::Return)
 		{
+			if(commands.size() > 30)
+				commands.erase(commands.begin());
 			commands.push_back(current_command);
 			current_command = "";
 		}
